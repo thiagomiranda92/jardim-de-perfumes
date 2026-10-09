@@ -49,20 +49,33 @@ const aromasDeAmbiente: Aroma[] = [
   { id: 'quebra-nozes', name: 'Quebra-Nozes', images: [] },
 ];
 
+const fotoFlorDeFigo = '/images/products/flor-de-figo-difusor-home-spray.png';
+const aromasComFotos = (produto: 'Difusor' | 'Home spray'): Aroma[] => aromasDeAmbiente.map(aroma => ({
+  ...aroma,
+  images: aroma.id === 'flor-de-figo'
+    ? [{
+        src: fotoFlorDeFigo,
+        alt: produto === 'Difusor'
+          ? 'Difusor Flor de Figo à esquerda e home spray Flor de Figo à direita, em frascos bordô decorados com pérolas.'
+          : 'Home spray Flor de Figo à direita e difusor Flor de Figo à esquerda, em frascos bordô decorados com pérolas.',
+      }]
+    : [],
+}));
+
 export const products: Product[] = [
   {
     id: 'difusor',
     name: 'Difusor',
     categoryId: 'difusores',
     images: [],
-    aromas: aromasDeAmbiente.map(aroma => ({ ...aroma, images: [...aroma.images] })),
+    aromas: aromasComFotos('Difusor'),
   },
   {
     id: 'home-spray',
     name: 'Home spray',
     categoryId: 'home-spray',
     images: [],
-    aromas: aromasDeAmbiente.map(aroma => ({ ...aroma, images: [...aroma.images] })),
+    aromas: aromasComFotos('Home spray'),
   },
 ];
 export interface Highlight { id: string; kind: 'Promoção' | 'Feira'; title: string; text: string; date?: string; location?: string }
