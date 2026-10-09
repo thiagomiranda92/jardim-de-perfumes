@@ -30,6 +30,7 @@ const aromasDeAmbiente: Aroma[] = [
   { id: 'lavanda', name: 'Lavanda', images: [] },
   { id: 'acqua', name: 'Acqua', images: [] },
   { id: 'cha-branco', name: 'Chá branco', images: [] },
+  { id: 'cha-verde', name: 'Chá verde', images: [] },
   { id: 'rosa-branca', name: 'Rosa branca', images: [] },
   { id: 'cereja-avela', name: 'Cereja e Avelã', images: [] },
   { id: 'girassol', name: 'Girassol', images: [] },
@@ -49,17 +50,40 @@ const aromasDeAmbiente: Aroma[] = [
   { id: 'quebra-nozes', name: 'Quebra-Nozes', images: [] },
 ];
 
-const fotoFlorDeFigo = '/images/products/flor-de-figo-difusor-home-spray.png';
-const aromasComFotos = (produto: 'Difusor' | 'Home spray'): Aroma[] => aromasDeAmbiente.map(aroma => ({
+const fotosDosAromas: Record<string, { src: string; alt: string }> = {
+  'flor-de-figo': {
+    src: '/images/products/flor-de-figo-produtos.webp',
+    alt: 'Difusor Flor de Figo à esquerda e home spray Flor de Figo à direita, em frascos bordô decorados com pérolas.',
+  },
+  'bons-fluidos': {
+    src: '/images/products/bons-fluidos-produtos.webp',
+    alt: 'Home spray Bons Fluidos à esquerda e difusor Bons Fluidos à direita, em frascos rosé decorados com pérolas.',
+  },
+  'cha-verde': {
+    src: '/images/products/cha-verde-produtos.webp',
+    alt: 'Difusor Chá verde à esquerda e home spray Chá verde à direita, em frascos verdes decorados.',
+  },
+  'flor-de-cerejeira': {
+    src: '/images/products/flor-de-cerejeira-produtos.webp',
+    alt: 'Difusor Flor de Cerejeira à esquerda e home spray Flor de Cerejeira à direita, em frascos rosados decorados.',
+  },
+  martan: {
+    src: '/images/products/martan-produtos.webp',
+    alt: 'Difusor Martan à esquerda e home spray Martan à direita, em frascos prateados decorados com pérolas.',
+  },
+  'quebra-nozes': {
+    src: '/images/products/quebra-nozes-produtos.webp',
+    alt: 'Difusor Quebra-Nozes à esquerda e home spray Quebra-Nozes à direita, em frascos decorados com pérolas.',
+  },
+  girassol: {
+    src: '/images/products/girassol-produtos.webp',
+    alt: 'Dois home sprays Girassol em frascos âmbar decorados com pérolas.',
+  },
+};
+
+const aromasComFotos = (): Aroma[] => aromasDeAmbiente.map(aroma => ({
   ...aroma,
-  images: aroma.id === 'flor-de-figo'
-    ? [{
-        src: fotoFlorDeFigo,
-        alt: produto === 'Difusor'
-          ? 'Difusor Flor de Figo à esquerda e home spray Flor de Figo à direita, em frascos bordô decorados com pérolas.'
-          : 'Home spray Flor de Figo à direita e difusor Flor de Figo à esquerda, em frascos bordô decorados com pérolas.',
-      }]
-    : [],
+  images: fotosDosAromas[aroma.id] ? [fotosDosAromas[aroma.id]] : [],
 }));
 
 export const products: Product[] = [
@@ -68,14 +92,14 @@ export const products: Product[] = [
     name: 'Difusor',
     categoryId: 'difusores',
     images: [],
-    aromas: aromasComFotos('Difusor'),
+    aromas: aromasComFotos(),
   },
   {
     id: 'home-spray',
     name: 'Home spray',
     categoryId: 'home-spray',
     images: [],
-    aromas: aromasComFotos('Home spray'),
+    aromas: aromasComFotos(),
   },
 ];
 export interface Highlight { id: string; kind: 'Promoção' | 'Feira'; title: string; text: string; date?: string; location?: string }

@@ -38,7 +38,7 @@ As nove categorias são reais, mas não representam produtos individuais cadastr
 
 O cadastro definitivo de produtos será feito posteriormente com imagens, dados reais e confirmação de conclusão do usuário.
 
-Difusor e Home spray já possuem os 20 aromas informados pelo usuário. A fotografia de Flor de Figo mostra o difusor à esquerda e o home spray à direita e está associada a esse aroma nos dois produtos. As grafias “Baboo” e “Martan” foram preservadas como recebidas e ainda precisam ser confirmadas. As demais fotos, volumes e preços continuam pendentes.
+Difusor e Home spray já possuem os 21 aromas informados pelo usuário, incluindo Chá verde. Há fotografias reais associadas a Bons Fluidos, Chá verde, Flor de Cerejeira, Martan, Quebra-Nozes, Girassol e Flor de Figo. As imagens foram convertidas para WebP para carregamento mais rápido. A grafia “Baboo” foi preservada como recebida e ainda precisa ser confirmada. As demais fotos, volumes e preços continuam pendentes.
 
 ## Adicionar fotografias e produtos
 
