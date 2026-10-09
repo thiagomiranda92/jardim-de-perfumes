@@ -26,7 +26,44 @@ export const categories: Category[] = [
   { id: 'sabonetes', name: 'Sabonetes decorados com decoupage', group: 'Autocuidado' },
   { id: 'aromatizadores-carro', name: 'Aromatizadores de carro', group: 'Carro' },
 ];
-// As categorias foram confirmadas. Produtos individuais aguardam cadastro real.
-export const products: Product[] = [];
+const aromasDeAmbiente: Aroma[] = [
+  { id: 'lavanda', name: 'Lavanda', images: [] },
+  { id: 'acqua', name: 'Acqua', images: [] },
+  { id: 'cha-branco', name: 'Chá branco', images: [] },
+  { id: 'rosa-branca', name: 'Rosa branca', images: [] },
+  { id: 'cereja-avela', name: 'Cereja e Avelã', images: [] },
+  { id: 'girassol', name: 'Girassol', images: [] },
+  { id: 'capim-limao', name: 'Capim-limão', images: [] },
+  { id: 'baboo', name: 'Baboo', images: [] },
+  { id: 'brisa-do-mar', name: 'Brisa do mar', images: [] },
+  { id: 'flor-de-cerejeira', name: 'Flor de Cerejeira', images: [] },
+  { id: 'martan', name: 'Martan', images: [] },
+  { id: 'especiaria-dourada', name: 'Especiaria dourada', images: [] },
+  { id: 'doce-encanto', name: 'Doce encanto', images: [] },
+  { id: 'vanilla-lemon', name: 'Vanilla lemon', images: [] },
+  { id: 'aconchego', name: 'Aconchego', images: [] },
+  { id: 'bons-fluidos', name: 'Bons Fluidos', images: [] },
+  { id: 'flor-de-figo', name: 'Flor de figo', images: [] },
+  { id: 'pistache', name: 'Pistache', images: [] },
+  { id: 'primavera', name: 'Primavera', images: [] },
+  { id: 'quebra-nozes', name: 'Quebra-Nozes', images: [] },
+];
+
+export const products: Product[] = [
+  {
+    id: 'difusor',
+    name: 'Difusor',
+    categoryId: 'difusores',
+    images: [],
+    aromas: aromasDeAmbiente.map(aroma => ({ ...aroma, images: [...aroma.images] })),
+  },
+  {
+    id: 'home-spray',
+    name: 'Home spray',
+    categoryId: 'home-spray',
+    images: [],
+    aromas: aromasDeAmbiente.map(aroma => ({ ...aroma, images: [...aroma.images] })),
+  },
+];
 export interface Highlight { id: string; kind: 'Promoção' | 'Feira'; title: string; text: string; date?: string; location?: string }
 export const highlights: Highlight[] = [];

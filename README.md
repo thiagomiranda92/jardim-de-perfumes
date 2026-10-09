@@ -38,6 +38,8 @@ As nove categorias são reais, mas não representam produtos individuais cadastr
 
 O cadastro definitivo de produtos será feito posteriormente com imagens, dados reais e confirmação de conclusão do usuário.
 
+Difusor e Home spray já possuem os 20 aromas informados pelo usuário. As grafias “Baboo” e “Martan” foram preservadas como recebidas e ainda precisam ser confirmadas. Fotos, volumes e preços continuam pendentes.
+
 ## Adicionar fotografias e produtos
 
 1. Salve as fotografias reais em `public/images/products/`, com nomes descritivos. Prefira WebP, proporções consistentes e imagens de até aproximadamente 1600 pixels. Preserve a embalagem e evite cortes.
