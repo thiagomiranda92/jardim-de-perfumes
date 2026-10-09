@@ -50,40 +50,85 @@ const aromasDeAmbiente: Aroma[] = [
   { id: 'quebra-nozes', name: 'Quebra-Nozes', images: [] },
 ];
 
-const fotosDosAromas: Record<string, { src: string; alt: string }> = {
+type ProdutoAromatico = 'difusor' | 'home-spray';
+type FotoDeProduto = { src: string; alt: string };
+
+const fotosDosAromas: Record<string, Record<ProdutoAromatico, FotoDeProduto>> = {
   'flor-de-figo': {
-    src: '/images/products/flor-de-figo-produtos.webp',
-    alt: 'Difusor Flor de Figo à esquerda e home spray Flor de Figo à direita, em frascos bordô decorados com pérolas.',
+    difusor: {
+      src: '/images/products/flor-de-figo-difusor.jpg',
+      alt: 'Difusor Flor de Figo em frasco bordô decorado com pérolas.',
+    },
+    'home-spray': {
+      src: '/images/products/flor-de-figo-home-spray.jpg',
+      alt: 'Home spray Flor de Figo em frasco bordô decorado com pérolas.',
+    },
   },
   'bons-fluidos': {
-    src: '/images/products/bons-fluidos-produtos.webp',
-    alt: 'Home spray Bons Fluidos à esquerda e difusor Bons Fluidos à direita, em frascos rosé decorados com pérolas.',
+    difusor: {
+      src: '/images/products/bons-fluidos-difusor.jpg',
+      alt: 'Difusor Bons Fluidos em frasco rosé decorado com pérolas.',
+    },
+    'home-spray': {
+      src: '/images/products/bons-fluidos-home-spray.jpg',
+      alt: 'Home spray Bons Fluidos em frasco rosé decorado com pérolas.',
+    },
   },
   'cha-verde': {
-    src: '/images/products/cha-verde-produtos.webp',
-    alt: 'Difusor Chá verde à esquerda e home spray Chá verde à direita, em frascos verdes decorados.',
+    difusor: {
+      src: '/images/products/cha-verde-difusor.jpg',
+      alt: 'Difusor Chá verde em frasco verde decorado com contas turquesa.',
+    },
+    'home-spray': {
+      src: '/images/products/cha-verde-home-spray.jpg',
+      alt: 'Home spray Chá verde em frasco verde decorado com contas turquesa.',
+    },
   },
   'flor-de-cerejeira': {
-    src: '/images/products/flor-de-cerejeira-produtos.webp',
-    alt: 'Difusor Flor de Cerejeira à esquerda e home spray Flor de Cerejeira à direita, em frascos rosados decorados.',
+    difusor: {
+      src: '/images/products/flor-de-cerejeira-difusor.jpg',
+      alt: 'Difusor Flor de Cerejeira em frasco rosado decorado com cristais.',
+    },
+    'home-spray': {
+      src: '/images/products/flor-de-cerejeira-home-spray.jpg',
+      alt: 'Home spray Flor de Cerejeira em frasco rosado decorado com cristais.',
+    },
   },
   martan: {
-    src: '/images/products/martan-produtos.webp',
-    alt: 'Difusor Martan à esquerda e home spray Martan à direita, em frascos prateados decorados com pérolas.',
+    difusor: {
+      src: '/images/products/martan-difusor.jpg',
+      alt: 'Difusor Martan em frasco prateado decorado com pérolas.',
+    },
+    'home-spray': {
+      src: '/images/products/martan-home-spray.jpg',
+      alt: 'Home spray Martan em frasco prateado decorado com pérolas.',
+    },
   },
   'quebra-nozes': {
-    src: '/images/products/quebra-nozes-produtos.webp',
-    alt: 'Difusor Quebra-Nozes à esquerda e home spray Quebra-Nozes à direita, em frascos decorados com pérolas.',
+    difusor: {
+      src: '/images/products/quebra-nozes-difusor.jpg',
+      alt: 'Difusor Quebra-Nozes em frasco âmbar decorado com pérolas.',
+    },
+    'home-spray': {
+      src: '/images/products/quebra-nozes-home-spray.jpg',
+      alt: 'Home spray Quebra-Nozes em frasco transparente decorado com pérolas.',
+    },
   },
   girassol: {
-    src: '/images/products/girassol-produtos.webp',
-    alt: 'Dois home sprays Girassol em frascos âmbar decorados com pérolas.',
+    difusor: {
+      src: '/images/products/girassol-difusor.jpg',
+      alt: 'Frasco largo do aroma Girassol em tom âmbar, decorado com contas douradas.',
+    },
+    'home-spray': {
+      src: '/images/products/girassol-home-spray.jpg',
+      alt: 'Home spray Girassol em frasco âmbar decorado com pérolas.',
+    },
   },
 };
 
-const aromasComFotos = (): Aroma[] => aromasDeAmbiente.map(aroma => ({
+const aromasComFotos = (produto: ProdutoAromatico): Aroma[] => aromasDeAmbiente.map(aroma => ({
   ...aroma,
-  images: fotosDosAromas[aroma.id] ? [fotosDosAromas[aroma.id]] : [],
+  images: fotosDosAromas[aroma.id] ? [fotosDosAromas[aroma.id][produto]] : [],
 }));
 
 export const products: Product[] = [
@@ -92,14 +137,14 @@ export const products: Product[] = [
     name: 'Difusor',
     categoryId: 'difusores',
     images: [],
-    aromas: aromasComFotos(),
+    aromas: aromasComFotos('difusor'),
   },
   {
     id: 'home-spray',
     name: 'Home spray',
     categoryId: 'home-spray',
     images: [],
-    aromas: aromasComFotos(),
+    aromas: aromasComFotos('home-spray'),
   },
 ];
 export interface Highlight { id: string; kind: 'Promoção' | 'Feira'; title: string; text: string; date?: string; location?: string }

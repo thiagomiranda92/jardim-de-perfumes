@@ -38,7 +38,7 @@ As nove categorias são reais, mas não representam produtos individuais cadastr
 
 O cadastro definitivo de produtos será feito posteriormente com imagens, dados reais e confirmação de conclusão do usuário.
 
-Difusor e Home spray já possuem os 21 aromas informados pelo usuário, incluindo Chá verde. Há fotografias reais associadas a Bons Fluidos, Chá verde, Flor de Cerejeira, Martan, Quebra-Nozes, Girassol e Flor de Figo. As imagens foram convertidas para WebP para carregamento mais rápido. A grafia “Baboo” foi preservada como recebida e ainda precisa ser confirmada. As demais fotos, volumes e preços continuam pendentes.
+Difusor e Home spray já possuem os 21 aromas informados pelo usuário, incluindo Chá verde. Bons Fluidos, Chá verde, Flor de Cerejeira, Martan, Quebra-Nozes, Girassol e Flor de Figo têm imagens individuais para difusor e home spray, derivadas das fotografias reais enviadas e otimizadas em JPEG. No caso de Girassol, o frasco largo da esquerda foi associado provisoriamente ao difusor; o rótulo da própria foto ainda precisa ser confirmado com a proprietária. A grafia “Baboo” foi preservada como recebida e também precisa ser confirmada. As demais fotos, volumes e preços continuam pendentes.
 
 ## Adicionar fotografias e produtos
 
