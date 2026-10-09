@@ -1,5 +1,6 @@
 export type Group = 'Ambientes' | 'Autocuidado' | 'Carro';
 export interface Category { id: string; name: string; group: Group }
+export interface Aroma { id: string; name: string; images: { src: string; alt: string }[]; description?: string; price?: number; available?: boolean }
 export interface Product {
   id: string;
   name: string;
@@ -10,6 +11,7 @@ export interface Product {
   fragrance?: string;
   size?: string;
   variations?: string[];
+  aromas?: Aroma[];
   available?: boolean;
   featured?: boolean;
 }
