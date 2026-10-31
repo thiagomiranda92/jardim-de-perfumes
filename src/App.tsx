@@ -90,6 +90,7 @@ export default function App() {
           </div>
         </div>
       </div>
+      <Highlights/>
       <Catalog categoryId={categoryId} onCategoryChange={setCategoryId} query={query} onQueryChange={setQuery} onOpen={setSelection}/>
       <section className="manifesto">
         <div className="shell manifesto-inner">
@@ -104,7 +105,6 @@ export default function App() {
           </ul>
         </div>
       </section>
-      <Highlights/>
       <section id="sobre" className="about shell">
         <div className="about-photo" data-reveal><img src="/images/products/flor-de-cerejeira-home-spray.jpg" alt="Home spray Flor de Cerejeira em frasco rosado decorado com cristais." loading="lazy" width="1086" height="1448"/></div>
         <div className="about-copy">
