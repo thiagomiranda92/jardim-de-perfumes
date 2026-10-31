@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { ArrowUpRight, Flower2, Search, X } from 'lucide-react';
 import { categories, ordemDeDestaque, products, type Aroma, type Category, type Product } from '../data/catalog';
 import { InstagramLink } from './InstagramLink';
@@ -38,9 +38,22 @@ function CatalogCard({ card, onOpen }: { card: Card; onOpen: (selection: Selecti
   </article>;
 }
 
-export function Catalog({ onOpen }: { onOpen: (selection: Selection) => void }) {
-  const [categoryId, setCategoryId] = useState(categories[0].id);
-  const [query, setQuery] = useState('');
+interface CatalogProps {
+  categoryId: string;
+  onCategoryChange: (id: string) => void;
+  query: string;
+  onQueryChange: (value: string) => void;
+  onOpen: (selection: Selection) => void;
+}
+
+export function Catalog({ categoryId, onCategoryChange, query, onQueryChange: setQuery, onOpen }: CatalogProps) {
+  const switcher = useRef<HTMLDivElement>(null);
+  // No celular os botões rolam na horizontal: mantém a categoria aberta visível, inclusive vinda das figurinhas.
+  useEffect(() => {
+    const row = switcher.current;
+    const active = row?.querySelector<HTMLElement>('[aria-pressed=true]');
+    if (row && active) row.scrollLeft = active.offsetLeft - (row.clientWidth - active.offsetWidth) / 2;
+  }, [categoryId]);
   const category = categories.find(item => item.id === categoryId)!;
   const terms = normalize(query).trim().split(/\s+/).filter(Boolean);
   const searching = terms.length > 0;
@@ -76,8 +89,8 @@ export function Catalog({ onOpen }: { onOpen: (selection: Selection) => void }) 
       </div>
       <div className="catalog-search" data-reveal><Search size={18} aria-hidden="true"/><label className="sr-only" htmlFor="catalog-search">Buscar produtos ou aromas</label><input id="catalog-search" type="search" placeholder="Buscar produtos ou aromas" value={query} onChange={event => setQuery(event.target.value)}/>{query && <button aria-label="Limpar busca" onClick={() => setQuery('')}><X size={16}/></button>}</div>
     </div>
-    <div className="gallery-switch" role="group" aria-label="Escolher categoria" data-reveal>
-      {categories.map(item => <button key={item.id} aria-pressed={!searching && categoryId === item.id} onClick={event => {setCategoryId(item.id);setQuery('');event.currentTarget.scrollIntoView({ block: 'nearest', inline: 'center' });}}>{item.short ?? item.name}</button>)}
+    <div className="gallery-switch" ref={switcher} role="group" aria-label="Escolher categoria" data-reveal>
+      {categories.map(item => <button key={item.id} aria-pressed={!searching && categoryId === item.id} onClick={() => {onCategoryChange(item.id);setQuery('');}}>{item.short ?? item.name}</button>)}
     </div>
     <div data-reveal>
       {searching ? <>

@@ -53,6 +53,8 @@ Difusor e Home spray já possuem os 21 aromas informados pelo usuário, incluind
 
 A vitrine reúne as nove categorias em botões, um ao lado do outro. Cada categoria mostra seus produtos em cards com fotografia; difusor e home spray mostram um card por aroma com foto, e os demais aromas aparecem listados abaixo. Para incluir a foto de um aroma, cadastre as duas imagens em `fotosDosAromas`; `ordemDeDestaque`, em `src/data/catalog.ts`, define a ordem dos cards. Categorias sem produto cadastrado exibem um aviso de que as fotos serão adicionadas em breve.
 
+As figurinhas sobre a faixa de aromas são ilustrações em `src/components/StickerShelf.tsx` e levam direto à categoria correspondente na vitrine; a lista `stickers` define o destino de cada uma. O desenho do aromatizador de carro e do escalda-pés é ilustrativo e deve ser revisado pela proprietária.
+
 ## Promoções e feiras
 
 Cadastre apenas informações confirmadas na lista `highlights`, em `src/data/catalog.ts`: identificador, tipo (`Promoção` ou `Feira`), título, texto e, quando aplicável, data e local. O carrossel usa essa lista. Enquanto estiver vazia, ele apresenta avisos transparentes de que os detalhes serão publicados posteriormente. Não há rotação automática.

@@ -1,12 +1,13 @@
 import { useEffect, useState, type MouseEvent } from 'react';
 import { ArrowDown, ArrowUpRight, Flower2, Leaf, MapPin, Menu, X } from 'lucide-react';
 import { store } from './data/store';
-import { aromaNames } from './data/catalog';
+import { aromaNames, categories } from './data/catalog';
 import { useReveal } from './hooks/useReveal';
 import { Catalog } from './components/Catalog';
 import { Highlights } from './components/Highlights';
 import { InstagramLink } from './components/InstagramLink';
 import { ProductDetails, type Selection } from './components/ProductDetails';
+import { StickerShelf } from './components/StickerShelf';
 
 const navigation = [
   { href: '#colecao', label: 'Nossa vitrine' },
@@ -18,6 +19,8 @@ export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [selection, setSelection] = useState<Selection>();
+  const [categoryId, setCategoryId] = useState(categories[0].id);
+  const [query, setQuery] = useState('');
   useReveal();
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -34,6 +37,11 @@ export default function App() {
       document.querySelector(targetId)?.scrollIntoView();
       window.history.replaceState(null, '', targetId);
     }));
+  };
+  const openCategory = (id: string, event: MouseEvent<HTMLAnchorElement>) => {
+    setCategoryId(id);
+    setQuery('');
+    handleNavClick(event);
   };
   return <>
     <a className="skip-link" href="#conteudo">Pular para o conteúdo</a>
@@ -74,12 +82,15 @@ export default function App() {
           </svg>
         </div>
       </section>
-      <div className="marquee" aria-label={`Aromas: ${aromaNames.join(', ')}`} role="img">
-        <div className="marquee-track" aria-hidden="true">
-          {[0, 1].map(copy => <div className="marquee-group" key={copy}>{aromaNames.map(name => <span key={name}>{name}<Flower2 size={15} strokeWidth={1.4}/></span>)}</div>)}
+      <div className="sticker-stage">
+        <StickerShelf onSelect={openCategory}/>
+        <div className="marquee" aria-label={`Aromas: ${aromaNames.join(', ')}`} role="img">
+          <div className="marquee-track" aria-hidden="true">
+            {[0, 1].map(copy => <div className="marquee-group" key={copy}>{aromaNames.map(name => <span key={name}>{name}<Flower2 size={15} strokeWidth={1.4}/></span>)}</div>)}
+          </div>
         </div>
       </div>
-      <Catalog onOpen={setSelection}/>
+      <Catalog categoryId={categoryId} onCategoryChange={setCategoryId} query={query} onQueryChange={setQuery} onOpen={setSelection}/>
       <section className="manifesto">
         <div className="shell manifesto-inner">
           <div>
