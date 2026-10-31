@@ -57,7 +57,18 @@ As figurinhas sobre a faixa de aromas são ilustrações em `src/components/Stic
 
 ## Promoções e feiras
 
-Cadastre apenas informações confirmadas na lista `highlights`, em `src/data/catalog.ts`: identificador, tipo (`Promoção` ou `Feira`), título, texto e, quando aplicável, data e local. O carrossel usa essa lista. Enquanto estiver vazia, ele apresenta avisos transparentes de que os detalhes serão publicados posteriormente. Não há rotação automática.
+Cadastre apenas informações confirmadas, em `src/data/catalog.ts`.
+
+- `highlights`: promoções e kits de presente do carrossel. Cada item tem identificador, tipo (`Promoção` ou `Presente`), título, texto e, quando houver, validade e imagem. Enquanto a lista estiver vazia, o carrossel apresenta avisos transparentes de que os detalhes serão publicados posteriormente. Não há rotação automática.
+- `fairs`: feiras do calendário. Cada item tem identificador, data no formato `AAAA-MM-DD`, título, local e, quando houver, horário, endereço e observação. O dia fica marcado e, ao clicar, mostra os detalhes e o link para o mapa. O calendário abre no mês da próxima feira.
+
+## Lista de pedido
+
+Em cada produto, o visitante pode adicionar itens a uma lista, que fica guardada apenas no próprio navegador. A lista monta uma mensagem que é copiada e colada na conversa do Instagram, aberta por `instagramMessage`, em `src/data/store.ts`. Não há pagamento nem envio automático.
+
+## Quiz de aromas
+
+As perguntas e a classificação ficam em `src/data/quiz.ts`. A classificação em `perfilDosAromas` é um rascunho deduzido apenas do nome de cada aroma e deve ser revisada pela proprietária. Martan, Baboo, Bons Fluidos e Quebra-Nozes só entram nas sugestões depois de classificados.
 
 ## Revisão da base
 

@@ -152,5 +152,10 @@ export const products: Product[] = [
 export const ordemDeDestaque = ['martan', 'cha-verde', 'flor-de-figo', 'flor-de-cerejeira', 'bons-fluidos', 'girassol', 'quebra-nozes'];
 export const aromaNames = aromasDeAmbiente.map(aroma => aroma.name);
 
-export interface Highlight { id: string; kind: 'Promoção' | 'Feira'; title: string; text: string; date?: string; location?: string }
+// Promoções e kits de presente exibidos no carrossel. Cadastre somente informações confirmadas.
+export interface Highlight { id: string; kind: 'Promoção' | 'Presente'; title: string; text: string; validity?: string; image?: { src: string; alt: string } }
 export const highlights: Highlight[] = [];
+
+// Feiras exibidas no calendário. `date` usa o formato AAAA-MM-DD; o local gera o link para o mapa.
+export interface FairEvent { id: string; date: string; title: string; time?: string; location: string; address?: string; note?: string }
+export const fairs: FairEvent[] = [];

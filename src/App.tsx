@@ -2,7 +2,10 @@ import { useEffect, useState, type MouseEvent } from 'react';
 import { ArrowDown, ArrowUpRight, Flower2, Leaf, MapPin, Menu, X } from 'lucide-react';
 import { store } from './data/store';
 import { aromaNames, categories } from './data/catalog';
+import { useOrderList } from './hooks/useOrderList';
 import { useReveal } from './hooks/useReveal';
+import { AromaQuiz } from './components/AromaQuiz';
+import { OrderList } from './components/OrderList';
 import { Catalog } from './components/Catalog';
 import { Highlights } from './components/Highlights';
 import { InstagramLink } from './components/InstagramLink';
@@ -12,6 +15,7 @@ import { StickerShelf } from './components/StickerShelf';
 const navigation = [
   { href: '#colecao', label: 'Nossa vitrine' },
   { href: '#novidades', label: 'Novidades & feiras' },
+  { href: '#quiz', label: 'Descubra seu aroma' },
   { href: '#sobre', label: 'Nosso jardim' },
 ];
 
@@ -21,6 +25,7 @@ export default function App() {
   const [selection, setSelection] = useState<Selection>();
   const [categoryId, setCategoryId] = useState(categories[0].id);
   const [query, setQuery] = useState('');
+  const order = useOrderList();
   useReveal();
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -91,7 +96,8 @@ export default function App() {
         </div>
       </div>
       <Highlights/>
-      <Catalog categoryId={categoryId} onCategoryChange={setCategoryId} query={query} onQueryChange={setQuery} onOpen={setSelection}/>
+      <Catalog categoryId={categoryId} onCategoryChange={setCategoryId} query={query} onQueryChange={setQuery} onOpen={setSelection} onAdd={order.add}/>
+      <AromaQuiz onOpen={setSelection} onAdd={order.add}/>
       <section className="manifesto">
         <div className="shell manifesto-inner">
           <div>
@@ -139,6 +145,7 @@ export default function App() {
         </div>
       </div>
     </footer>
-    {selection && <ProductDetails selection={selection} onClose={() => setSelection(undefined)}/>}
+    {selection && <ProductDetails selection={selection} onClose={() => setSelection(undefined)} onAdd={order.add}/>}
+    <OrderList items={order.items} count={order.count} onQuantityChange={order.setQuantity}/>
   </>;
 }

@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { ArrowUpRight, Flower2, Search, X } from 'lucide-react';
+import { ArrowUpRight, Flower2, Plus, Search, X } from 'lucide-react';
 import { categories, ordemDeDestaque, products, type Aroma, type Category, type Product } from '../data/catalog';
 import { InstagramLink } from './InstagramLink';
 import { PhotoPlaceholder } from './PhotoPlaceholder';
@@ -44,9 +44,10 @@ interface CatalogProps {
   query: string;
   onQueryChange: (value: string) => void;
   onOpen: (selection: Selection) => void;
+  onAdd: (label: string) => void;
 }
 
-export function Catalog({ categoryId, onCategoryChange, query, onQueryChange: setQuery, onOpen }: CatalogProps) {
+export function Catalog({ categoryId, onCategoryChange, query, onQueryChange: setQuery, onOpen, onAdd }: CatalogProps) {
   const switcher = useRef<HTMLDivElement>(null);
   // No celular os botões rolam na horizontal: mantém a categoria aberta visível, inclusive vinda das figurinhas.
   useEffect(() => {
@@ -103,7 +104,7 @@ export function Catalog({ categoryId, onCategoryChange, query, onQueryChange: se
           <span><small>Mais {withoutPhoto.length} aromas</small>{withoutPhoto.map(({ aroma }) => aroma.name).join(' · ')}</span>
           <ArrowUpRight size={22} strokeWidth={1.5} aria-hidden="true"/>
         </button>}
-        {!cards.length && <div className="catalog-empty"><Flower2 size={34} strokeWidth={1.1} aria-hidden="true"/><h3>{category.name}</h3><p>As fotografias, descrições e preços desta categoria serão adicionados em breve.</p><InstagramLink label="Consultar este produto"/></div>}
+        {!cards.length && <div className="catalog-empty"><Flower2 size={34} strokeWidth={1.1} aria-hidden="true"/><h3>{category.name}</h3><p>As fotografias, descrições e preços desta categoria serão adicionados em breve.</p><div className="details-actions"><button className="button primary" onClick={() => onAdd(category.name)}><Plus size={17} aria-hidden="true"/>Adicionar à lista</button><InstagramLink label="Consultar pelo Instagram" className="text-link"/></div></div>}
       </div>}
     </div>
   </section>;
