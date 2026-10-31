@@ -1,30 +1,97 @@
 import { useState } from 'react';
-import { ArrowUpRight, Search, X } from 'lucide-react';
-import { categories, products, type Group } from '../data/catalog';
+import { ArrowUpRight, Flower2, Search, X } from 'lucide-react';
+import { categories, ordemDeDestaque, products, type Aroma, type Category, type Product } from '../data/catalog';
+import { InstagramLink } from './InstagramLink';
 import { PhotoPlaceholder } from './PhotoPlaceholder';
-import { ProductDetails, type Selection } from './ProductDetails';
-const filters = ['Todos', 'Ambientes', 'Autocuidado', 'Carro'] as const;
-const normalize = (value: string) => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-export function Catalog() {
-  const [filter, setFilter] = useState<Group | 'Todos'>('Todos');
+import type { Selection } from './ProductDetails';
+
+interface Card { key: string; label: string; name: string; image?: { src: string; alt: string }; selection: Selection }
+
+const normalize = (value: string) => value.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+const productsOf = (category: Category) => products.filter(p => p.categoryId === category.id && p.available !== false);
+const aromasOf = (product: Product) => product.aromas?.filter(a => a.available !== false) ?? [];
+const destaque = (aroma: Aroma) => {
+  const index = ordemDeDestaque.indexOf(aroma.id);
+  return index < 0 ? ordemDeDestaque.length : index;
+};
+const aromaCard = (category: Category, product: Product, aroma: Aroma): Card => ({
+  key: `${product.id}-${aroma.id}`,
+  label: product.name,
+  name: aroma.name,
+  image: aroma.images[0],
+  selection: { category, product, aromaId: aroma.id },
+});
+const productCard = (category: Category, product: Product): Card => ({
+  key: product.id,
+  label: category.name,
+  name: product.name,
+  image: product.images[0],
+  selection: { category, product },
+});
+
+function CatalogCard({ card, onOpen }: { card: Card; onOpen: (selection: Selection) => void }) {
+  return <article>
+    <button className="aroma-card" aria-haspopup="dialog" aria-label={`Ver ${card.label} ${card.name}`} onClick={() => onOpen(card.selection)}>
+      <span className="aroma-photo">{card.image ? <img src={card.image.src} alt={card.image.alt} loading="lazy" width="1086" height="1448"/> : <PhotoPlaceholder/>}</span>
+      <span className="aroma-caption"><span><small>{card.label}</small>{card.name}</span><ArrowUpRight size={20} strokeWidth={1.5} aria-hidden="true"/></span>
+    </button>
+  </article>;
+}
+
+export function Catalog({ onOpen }: { onOpen: (selection: Selection) => void }) {
+  const [categoryId, setCategoryId] = useState(categories[0].id);
   const [query, setQuery] = useState('');
-  const [selection, setSelection] = useState<Selection>();
-  const entries: Selection[] = categories.filter(c => filter === 'Todos' || c.group === filter).flatMap(category => {
-    const items = products.filter(p => p.categoryId === category.id && p.available !== false);
-    return items.length ? items.map(product => ({ category, product })) : [{ category }];
-  });
+  const category = categories.find(item => item.id === categoryId)!;
   const terms = normalize(query).trim().split(/\s+/).filter(Boolean);
-  const visible = entries.filter(({ category, product }) => {
-    const text = normalize([category.name, category.group, product?.name, product?.description, product?.fragrance, ...(product?.aromas?.filter(a=>a.available!==false).map(a => a.name) ?? [])].join(' '));
-    return terms.every(term => text.includes(term));
+  const searching = terms.length > 0;
+
+  // Na categoria aberta, os aromas com fotografia viram cards e os demais ficam listados abaixo deles.
+  const items = productsOf(category);
+  const cards = items.flatMap(product => {
+    const aromas = aromasOf(product);
+    if (!aromas.length) return [productCard(category, product)];
+    return aromas.filter(a => a.images.length).sort((a, b) => destaque(a) - destaque(b)).map(aroma => aromaCard(category, product, aroma));
   });
-  return <section id="colecao" className="catalog section-shell">
-    <div className="section-heading"><div><p className="eyebrow">Conheça nosso jardim</p><h2>Pequenos cuidados.<br/><em>Boas lembranças.</em></h2></div><p>Explore nossas categorias de aromas e autocuidado. Produtos artesanais, feitos à mão.</p></div>
-    <div className="catalog-tools"><div className="filters" role="group" aria-label="Filtrar categorias">{filters.map(f => <button key={f} aria-pressed={filter === f} onClick={() => setFilter(f)}>{f}</button>)}</div><div className="catalog-search"><Search size={18} aria-hidden="true"/><label className="sr-only" htmlFor="catalog-search">Buscar produtos ou aromas</label><input id="catalog-search" type="search" placeholder="Buscar produtos ou aromas" value={query} onChange={event => setQuery(event.target.value)}/>{query && <button aria-label="Limpar busca" onClick={() => setQuery('')}><X size={16}/></button>}</div></div>
-    <p className="catalog-note">Clique em um card para conhecer os detalhes. Fotografias, aromas e preços serão adicionados em breve.</p>
-    <div className="product-grid">{visible.map(entry => {const { category, product } = entry;return <article className="product-card" key={product?.id ?? category.id}><button className="product-open" aria-haspopup="dialog" aria-label={`Ver detalhes de ${product?.name ?? category.name}`} onClick={() => setSelection(entry)}>{product?.images[0] ? <img className="product-photo" src={product.images[0].src} alt={product.images[0].alt} loading="lazy" width="600" height="650"/> : <PhotoPlaceholder variant={categories.indexOf(category)}/>}<span className="product-info"><span className="product-category">{category.group}</span><span className="product-title">{product?.name ?? category.name}</span>{product?.price !== undefined && <span className="card-price">{new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(product.price)}</span>}<span className="card-details-link">Ver detalhes & aromas <ArrowUpRight size={16}/></span></span></button></article>;})}</div>
-    {!visible.length && <div className="search-empty"><Search size={26} aria-hidden="true"/><h3>Nenhum resultado por aqui.</h3><p>Tente outro nome ou escolha uma categoria diferente.</p><button className="text-link" onClick={() => {setQuery('');setFilter('Todos');}}>Ver toda a vitrine</button></div>}
-    <p className="results-count" role="status">{visible.length} {visible.length === 1 ? 'resultado' : 'resultados'} neste jardim</p>
-    {selection && <ProductDetails selection={selection} onClose={() => setSelection(undefined)}/>}
+  const withoutPhoto = items.flatMap(product => aromasOf(product).filter(a => !a.images.length).map(aroma => ({ product, aroma })));
+
+  // A busca percorre a vitrine inteira, ignorando a categoria aberta.
+  const results: Card[] = !searching ? [] : categories.flatMap(item => {
+    const base = [item.name, item.group];
+    const matches = (...parts: (string | undefined)[]) => terms.every(term => normalize([...base, ...parts].join(' ')).includes(term));
+    const found = productsOf(item).flatMap(product => {
+      const aromas = aromasOf(product);
+      const own = [product.name, product.description, product.fragrance];
+      if (!aromas.length) return matches(...own) ? [productCard(item, product)] : [];
+      return aromas.filter(aroma => matches(...own, aroma.name)).map(aroma => aromaCard(item, product, aroma));
+    });
+    if (productsOf(item).length || !matches()) return found;
+    return [{ key: item.id, label: item.group, name: item.name, selection: { category: item } }];
+  });
+
+  return <section id="colecao" className="gallery shell">
+    <div className="section-heading">
+      <div>
+        <p className="eyebrow" data-reveal>Conheça nosso jardim</p>
+        <h2 data-reveal>Pequenos cuidados.<br/><em>Boas lembranças.</em></h2>
+      </div>
+      <div className="catalog-search" data-reveal><Search size={18} aria-hidden="true"/><label className="sr-only" htmlFor="catalog-search">Buscar produtos ou aromas</label><input id="catalog-search" type="search" placeholder="Buscar produtos ou aromas" value={query} onChange={event => setQuery(event.target.value)}/>{query && <button aria-label="Limpar busca" onClick={() => setQuery('')}><X size={16}/></button>}</div>
+    </div>
+    <div className="gallery-switch" role="group" aria-label="Escolher categoria" data-reveal>
+      {categories.map(item => <button key={item.id} aria-pressed={!searching && categoryId === item.id} onClick={event => {setCategoryId(item.id);setQuery('');event.currentTarget.scrollIntoView({ block: 'nearest', inline: 'center' });}}>{item.short ?? item.name}</button>)}
+    </div>
+    <div data-reveal>
+      {searching ? <>
+        <p className="results-count" role="status">{results.length} {results.length === 1 ? 'resultado' : 'resultados'} neste jardim</p>
+        {results.length > 0 && <div className="gallery-grid">{results.map(card => <CatalogCard key={card.key} card={card} onOpen={onOpen}/>)}</div>}
+        {!results.length && <div className="catalog-empty"><Search size={30} strokeWidth={1.2} aria-hidden="true"/><h3>Nenhum resultado por aqui.</h3><p>Tente outro nome ou escolha uma categoria.</p><button className="text-link" onClick={() => setQuery('')}>Ver toda a vitrine</button></div>}
+      </> : <div key={category.id} className="gallery-panel">
+        {cards.length > 0 && <div className="gallery-grid">{cards.map(card => <CatalogCard key={card.key} card={card} onOpen={onOpen}/>)}</div>}
+        {withoutPhoto.length > 0 && <button className="more-aromas" aria-haspopup="dialog" onClick={() => onOpen({ category, product: withoutPhoto[0].product })}>
+          <span><small>Mais {withoutPhoto.length} aromas</small>{withoutPhoto.map(({ aroma }) => aroma.name).join(' · ')}</span>
+          <ArrowUpRight size={22} strokeWidth={1.5} aria-hidden="true"/>
+        </button>}
+        {!cards.length && <div className="catalog-empty"><Flower2 size={34} strokeWidth={1.1} aria-hidden="true"/><h3>{category.name}</h3><p>As fotografias, descrições e preços desta categoria serão adicionados em breve.</p><InstagramLink label="Consultar este produto"/></div>}
+      </div>}
+    </div>
   </section>;
 }

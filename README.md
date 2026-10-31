@@ -46,8 +46,12 @@ Difusor e Home spray já possuem os 21 aromas informados pelo usuário, incluind
 2. Em `src/data/catalog.ts`, acrescente um item à lista `products`, usando o `categoryId` de uma das categorias existentes.
 3. Preencha `id`, `name`, `categoryId` e `images`. Cada imagem usa `src` (caminho iniciado em `/images/products/`) e `alt` (descrição objetiva da foto).
 4. Adicione `price` como número em reais apenas quando confirmado. A página formata o valor automaticamente. Descrição, fragrância, tamanho e disponibilidade são opcionais.
-5. O card neutro de uma categoria é substituído pelos produtos cadastrados nessa categoria. Ao clicar, uma janela de detalhes mostra as fotos, com miniaturas para alternar entre elas.
+5. O aviso de fotos em breve de uma categoria na vitrine é substituído pelos produtos cadastrados nessa categoria. Ao clicar, uma janela de detalhes mostra as fotos, com miniaturas para alternar entre elas.
 6. Execute `pnpm build` e revise a página antes de salvar um commit.
+
+## Vitrine
+
+A vitrine reúne as nove categorias em botões, um ao lado do outro. Cada categoria mostra seus produtos em cards com fotografia; difusor e home spray mostram um card por aroma com foto, e os demais aromas aparecem listados abaixo. Para incluir a foto de um aroma, cadastre as duas imagens em `fotosDosAromas`; `ordemDeDestaque`, em `src/data/catalog.ts`, define a ordem dos cards. Categorias sem produto cadastrado exibem um aviso de que as fotos serão adicionadas em breve.
 
 ## Promoções e feiras
 
@@ -66,6 +70,6 @@ A aparência foi aprovada como direção de design pelo usuário; os textos novo
 
 ## Busca e aromas
 
-A busca combina nome, categoria, descrição e aromas cadastrados; ignora acentos e maiúsculas e respeita o filtro de categoria ativo. Os cards abrem detalhes sem sair da vitrine. A janela pode ser fechada pelo botão, pela tecla Escape ou clicando fora dela.
+A busca combina nome, categoria, descrição e aromas cadastrados; ignora acentos e maiúsculas e percorre a vitrine inteira, mostrando um card para cada resultado. Os cards abrem detalhes sem sair da vitrine. A janela pode ser fechada pelo botão, pela tecla Escape ou clicando fora dela.
 
 Para cada produto, a lista opcional `aromas` contém `id`, `name` e `images`, além de descrição, preço e disponibilidade opcionais. Ao selecionar um aroma, a foto principal muda para a primeira imagem dele, as miniaturas são atualizadas e o preço específico aparece, se informado. Na ausência de fotos do aroma, usam-se as fotografias gerais do produto. Nenhum aroma foi cadastrado sem confirmação.
