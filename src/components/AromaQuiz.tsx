@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ArrowLeft, ArrowUpRight, Check, Plus, RotateCcw } from 'lucide-react';
 import { categories, products, type Aroma } from '../data/catalog';
 import { perfilDosAromas, perguntaClima, perguntaFamilia, perguntaProduto, type Clima, type Familia } from '../data/quiz';
+import { cardSizes, photoSrcSet } from '../data/photos';
 import { PhotoPlaceholder } from './PhotoPlaceholder';
 import type { Selection } from './ProductDetails';
 
@@ -48,7 +49,7 @@ export function AromaQuiz({ onOpen, onAdd }: { onOpen: (selection: Selection) =>
         <div className="quiz-options">{questions[step].options.map(option => <button key={option.value} onClick={() => {setAnswers({ ...answers, [keys[step]]: option.value });setStep(step + 1);}}>{option.label}<ArrowUpRight size={18} strokeWidth={1.5} aria-hidden="true"/></button>)}</div>
         {step > 0 && <button className="text-link quiz-back" onClick={() => setStep(step - 1)}><ArrowLeft size={15} aria-hidden="true"/>Voltar</button>}
       </div> : main && <div className="quiz-result" role="status">
-        <div className="quiz-photo">{main.images[0] ? <img src={main.images[0].src} alt={main.images[0].alt} width="1086" height="1448"/> : <PhotoPlaceholder/>}</div>
+        <div className="quiz-photo">{main.images[0] ? <img src={main.images[0].src} srcSet={photoSrcSet(main.images[0].src)} sizes={cardSizes} alt={main.images[0].alt} width="1086" height="1448"/> : <PhotoPlaceholder/>}</div>
         <div className="quiz-summary">
           <p className="eyebrow">Sugestão para você</p>
           <h3><small>{product?.name}</small>{main.name}</h3>

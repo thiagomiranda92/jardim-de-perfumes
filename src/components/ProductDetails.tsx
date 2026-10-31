@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Check, Plus, X } from 'lucide-react';
 import { type Category, type Product, products } from '../data/catalog';
 import { store } from '../data/store';
+import { fullSizes, photoSrcSet } from '../data/photos';
 import { PhotoPlaceholder } from './PhotoPlaceholder';
 import { InstagramLink } from './InstagramLink';
 export interface Selection { category: Category; product?: Product; aromaId?: string }
@@ -35,7 +36,7 @@ function DetailsContent({ selection, onAdd }: { selection: Selection; onAdd: (la
   };
   return <div className="details-grid">
     <div className="details-gallery" ref={gallery}>
-      <div className="details-main-photo" aria-live="polite">{photo ? <img key={photo.src} src={photo.src} alt={photo.alt} width="1086" height="1448"/> : <PhotoPlaceholder/>}</div>
+      <div className="details-main-photo" aria-live="polite">{photo ? <img key={photo.src} src={photo.src} srcSet={photoSrcSet(photo.src)} sizes={fullSizes} alt={photo.alt} width="1086" height="1448"/> : <PhotoPlaceholder/>}</div>
       {images.length > 1 && <div className="photo-thumbnails" aria-label="Fotografias do produto">{images.map((image, i) => <button key={`${image.src}-${i}`} onClick={() => setPhotoIndex(i)} aria-pressed={photoIndex === i} aria-label={`Ver foto ${i + 1}`}><img src={image.src} alt={image.alt}/></button>)}</div>}
     </div>
     <div className="details-copy">
@@ -50,8 +51,8 @@ function DetailsContent({ selection, onAdd }: { selection: Selection; onAdd: (la
       {!product && <p>As fotografias, descrições e preços desta categoria serão adicionados em breve.</p>}
       <div className="details-actions">
         <button className="button primary" onClick={addToList}>{addedLabel === orderLabel ? <Check size={17} aria-hidden="true"/> : <Plus size={17} aria-hidden="true"/>}{addedLabel === orderLabel ? 'Adicionado à lista' : 'Adicionar à lista'}</button>
-        <InstagramLink label="Consultar pelo Instagram" className="text-link"/>
       </div>
+      <div className="details-consult"><InstagramLink label="Consultar pelo Instagram" className="text-link"/></div>
       <p className="sr-only" role="status">{addedLabel === orderLabel ? `${orderLabel} adicionado à lista` : ''}</p>
       <p className="detail-delivery">{store.delivery}</p>
     </div>

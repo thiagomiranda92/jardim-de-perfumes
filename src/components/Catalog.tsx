@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { ArrowUpRight, Flower2, Plus, Search, X } from 'lucide-react';
 import { categories, ordemDeDestaque, products, type Aroma, type Category, type Product } from '../data/catalog';
+import { cardSizes, photoSrcSet } from '../data/photos';
 import { InstagramLink } from './InstagramLink';
 import { PhotoPlaceholder } from './PhotoPlaceholder';
 import type { Selection } from './ProductDetails';
@@ -32,7 +33,7 @@ const productCard = (category: Category, product: Product): Card => ({
 function CatalogCard({ card, onOpen }: { card: Card; onOpen: (selection: Selection) => void }) {
   return <article>
     <button className="aroma-card" aria-haspopup="dialog" aria-label={`Ver ${card.label} ${card.name}`} onClick={() => onOpen(card.selection)}>
-      <span className="aroma-photo">{card.image ? <img src={card.image.src} alt={card.image.alt} loading="lazy" width="1086" height="1448"/> : <PhotoPlaceholder/>}</span>
+      <span className="aroma-photo">{card.image ? <img src={card.image.src} srcSet={photoSrcSet(card.image.src)} sizes={cardSizes} alt={card.image.alt} loading="lazy" width="1086" height="1448"/> : <PhotoPlaceholder/>}</span>
       <span className="aroma-caption"><span><small>{card.label}</small>{card.name}</span><ArrowUpRight size={20} strokeWidth={1.5} aria-hidden="true"/></span>
     </button>
   </article>;

@@ -1,6 +1,7 @@
 import { useEffect, useState, type MouseEvent } from 'react';
 import { ArrowDown, ArrowUpRight, Flower2, Leaf, MapPin, Menu, X } from 'lucide-react';
 import { store } from './data/store';
+import { fullSizes, photoSrcSet } from './data/photos';
 import { aromaNames, categories } from './data/catalog';
 import { useOrderList } from './hooks/useOrderList';
 import { useReveal } from './hooks/useReveal';
@@ -79,8 +80,8 @@ export default function App() {
           </div>
         </div>
         <div className="hero-visual">
-          <figure className="hero-photo"><img src="/images/products/bons-fluidos-difusor.jpg" alt="Difusor Bons Fluidos em frasco rosé decorado com pérolas, sobre uma mesa de madeira diante de samambaias." width="1086" height="1448" fetchPriority="high"/></figure>
-          <figure className="hero-photo-small"><img src="/images/products/flor-de-figo-difusor.jpg" alt="Difusor Flor de Figo em frasco bordô decorado com pérolas, sobre bandeja rosé." width="1254" height="1254"/></figure>
+          <figure className="hero-photo"><img src="/images/products/bons-fluidos-difusor.jpg" srcSet={photoSrcSet('/images/products/bons-fluidos-difusor.jpg')} sizes={fullSizes} alt="Difusor Bons Fluidos em frasco rosé decorado com pérolas, sobre uma mesa de madeira diante de samambaias." width="1086" height="1448" fetchPriority="high"/></figure>
+          <figure className="hero-photo-small"><img src="/images/products/flor-de-figo-difusor-640.webp" alt="Difusor Flor de Figo em frasco bordô decorado com pérolas, sobre bandeja rosé." width="640" height="640"/></figure>
           <svg className="hero-seal" viewBox="0 0 120 120" aria-hidden="true">
             <defs><path id="seal-path" d="M60 60m-44 0a44 44 0 1 1 88 0a44 44 0 1 1-88 0"/></defs>
             <text><textPath href="#seal-path">feito à mão · produção artesanal · </textPath></text>
@@ -112,7 +113,7 @@ export default function App() {
         </div>
       </section>
       <section id="sobre" className="about shell">
-        <div className="about-photo" data-reveal><img src="/images/products/flor-de-cerejeira-home-spray.jpg" alt="Home spray Flor de Cerejeira em frasco rosado decorado com cristais." loading="lazy" width="1086" height="1448"/></div>
+        <div className="about-photo" data-reveal><img src="/images/products/flor-de-cerejeira-home-spray.jpg" srcSet={photoSrcSet('/images/products/flor-de-cerejeira-home-spray.jpg')} sizes={fullSizes} alt="Home spray Flor de Cerejeira em frasco rosado decorado com cristais." loading="lazy" width="1086" height="1448"/></div>
         <div className="about-copy">
           <img className="about-logo" src={store.logo} alt="Logotipo Jardim de Perfumes com rosas e folhagens" loading="lazy" width="1600" height="1351" data-reveal/>
           <p className="eyebrow" data-reveal>Por trás dos aromas</p>
@@ -125,7 +126,7 @@ export default function App() {
         </div>
       </section>
       <section id="contato" className="contact">
-        <img src="/images/products/martan-difusor.jpg" alt="" loading="lazy" width="1086" height="1448"/>
+        <img src="/images/products/martan-difusor.jpg" srcSet={photoSrcSet('/images/products/martan-difusor.jpg')} sizes="100vw" alt="" loading="lazy" width="1086" height="1448"/>
         <div className="contact-inner shell">
           <p className="eyebrow" data-reveal>Vamos conversar?</p>
           <h2 data-reveal>Encontre seu próximo <em>aroma favorito.</em></h2>

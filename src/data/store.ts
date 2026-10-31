@@ -4,6 +4,6 @@ export const store = {
   instagram: 'https://www.instagram.com/jardimdeperfumes/',
   instagramHandle: '@jardimdeperfumes',
   instagramMessage: 'https://ig.me/m/jardimdeperfumes',
-  logo: '/images/jardim-de-perfumes-logo.png',
+  logo: '/images/jardim-de-perfumes-logo-480.webp',
   delivery: 'Atendimento na região de Campinas, SP. Envio e frete combinados diretamente pelo Instagram.',
 };

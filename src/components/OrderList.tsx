@@ -49,7 +49,7 @@ function OrderDialog({ items, onQuantityChange, onClose }: Omit<OrderListProps, 
 export function OrderList({ items, count, onQuantityChange }: OrderListProps) {
   const [open, setOpen] = useState(false);
   return <>
-    {count > 0 && <button className="order-toggle" aria-haspopup="dialog" onClick={() => setOpen(true)}><ShoppingBag size={18} aria-hidden="true"/>Minha lista<span key={count}>{count}</span></button>}
+    {count > 0 && <button className="order-toggle" aria-haspopup="dialog" onClick={() => setOpen(true)}><ShoppingBag size={18} aria-hidden="true"/><span className="order-toggle-label">Minha lista</span><span className="order-count" key={count}>{count}<span className="sr-only"> itens</span></span></button>}
     {open && <OrderDialog items={items} onQuantityChange={onQuantityChange} onClose={() => setOpen(false)}/>}
   </>;
 }

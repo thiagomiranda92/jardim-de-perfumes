@@ -42,7 +42,7 @@ Difusor e Home spray já possuem os 21 aromas informados pelo usuário, incluind
 
 ## Adicionar fotografias e produtos
 
-1. Salve as fotografias reais em `public/images/products/`, com nomes descritivos. Prefira WebP, proporções consistentes e imagens de até aproximadamente 1600 pixels. Preserve a embalagem e evite cortes.
+1. Salve as fotografias reais em `public/images/products/`, em JPG (`.jpg`), com nomes descritivos, proporções consistentes e até aproximadamente 1600 pixels. Preserve a embalagem e evite cortes. Depois execute `pnpm fotos`, que gera a versão leve (`-640.webp`) usada no celular; sem ela, a foto não carrega corretamente.
 2. Em `src/data/catalog.ts`, acrescente um item à lista `products`, usando o `categoryId` de uma das categorias existentes.
 3. Preencha `id`, `name`, `categoryId` e `images`. Cada imagem usa `src` (caminho iniciado em `/images/products/`) e `alt` (descrição objetiva da foto).
 4. Adicione `price` como número em reais apenas quando confirmado. A página formata o valor automaticamente. Descrição, fragrância, tamanho e disponibilidade são opcionais.
