@@ -1,5 +1,5 @@
 import { useEffect, useState, type MouseEvent } from 'react';
-import { ArrowDown, ArrowUpRight, Flower2, Leaf, MapPin, Menu, X } from 'lucide-react';
+import { ArrowUpRight, Flower2, Leaf, MapPin, Menu, X } from 'lucide-react';
 import { store } from './data/store';
 import { asset, fullSizes, photoSrcSet } from './data/photos';
 import { aromaList, categories } from './data/catalog';
@@ -18,7 +18,6 @@ const navigation = [
   { href: '#colecao', label: 'Nossa vitrine' },
   { href: '#novidades', label: 'Novidades & feiras' },
   { href: '#quiz', label: 'Descubra seu aroma' },
-  { href: '#sobre', label: 'Nosso jardim' },
 ];
 
 export default function App() {
@@ -77,9 +76,7 @@ export default function App() {
           </h1>
           <p className="hero-slogan hero-line" style={{ '--d': '400ms' } as React.CSSProperties}>{store.slogan}</p>
           <div className="hero-actions hero-line" style={{ '--d': '500ms' } as React.CSSProperties}>
-            <a href="#colecao" className="button primary" onClick={handleNavClick}>Explore nossa vitrine <ArrowUpRight size={17} aria-hidden="true"/></a>
-            <a className="text-link" href="#sobre" onClick={handleNavClick}>Conheça a marca <ArrowDown size={15} aria-hidden="true"/></a>
-          </div>
+            <a href="#colecao" className="button primary" onClick={handleNavClick}>Explore nossa vitrine <ArrowUpRight size={17} aria-hidden="true"/></a>          </div>
         </div>
         <div className="hero-visual">
           <figure className="hero-photo"><img src={asset('/images/products/bons-fluidos-difusor.jpg')} srcSet={photoSrcSet(asset('/images/products/bons-fluidos-difusor.jpg'))} sizes={fullSizes} alt="Difusor Bons Fluidos em frasco rosé decorado com pérolas, sobre uma mesa de madeira diante de samambaias." width="1086" height="1448" fetchPriority="high"/></figure>
@@ -112,19 +109,6 @@ export default function App() {
             <li><Leaf size={22} strokeWidth={1.3} aria-hidden="true"/>Produção artesanal</li>
             <li><MapPin size={22} strokeWidth={1.3} aria-hidden="true"/>Região de Campinas · SP</li>
           </ul>
-        </div>
-      </section>
-      <section id="sobre" className="about shell">
-        <div className="about-photo" data-reveal><img src={asset('/images/products/flor-de-cerejeira-home-spray.jpg')} srcSet={photoSrcSet(asset('/images/products/flor-de-cerejeira-home-spray.jpg'))} sizes={fullSizes} alt="Home spray Flor de Cerejeira em frasco rosado decorado com cristais." loading="lazy" width="1086" height="1448"/></div>
-        <div className="about-copy">
-          <img className="about-logo" src={store.logo} alt="Logotipo Jardim de Perfumes com rosas e folhagens" loading="lazy" width="1600" height="1351" data-reveal/>
-          <p className="eyebrow" data-reveal>Por trás dos aromas</p>
-          <h2 data-reveal>Feito à mão.<br/><em>Para estar perto.</em></h2>
-          <div data-reveal>
-            <p>A Jardim de Perfumes reúne produtos artesanais para perfumação e autocuidado. Cada produto é feito à mão.</p>
-            <p>Você encontra nosso jardim no Instagram e nas feiras artesanais das quais participamos.</p>
-            <InstagramLink label="Conheça nosso Instagram" className="text-link"/>
-          </div>
         </div>
       </section>
       <section id="contato" className="contact">
