@@ -98,6 +98,8 @@ h3 { font-size: .78rem; font-weight: 600; letter-spacing: .16em; text-transform:
 .field-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); align-items: start; gap: 16px; }
 .price-input { display: flex; align-items: center; border: 1px solid var(--line); border-radius: 12px; background: #fff; padding-left: 14px; }
 .price-input span { color: var(--muted); font-size: .92rem; }
+.price-input .unit { padding-right: 14px; }
+.field .price-input input:first-child { padding-left: 14px; }
 .field .price-input input { border: 0; box-shadow: none; padding-left: 8px; }
 .price-input.is-invalid { border-color: var(--danger); }
 .price-input.is-invalid + small { color: var(--danger); }

@@ -8,7 +8,7 @@ import { CategoriesEditor } from './CategoriesEditor';
 import { FairsEditor } from './FairsEditor';
 import { HighlightsEditor } from './HighlightsEditor';
 import { ProductsEditor } from './ProductsEditor';
-import type { Edit } from './fields';
+import { isGlassSize, type Edit } from './fields';
 
 const tabs = [
   { id: 'produtos', label: 'Produtos', icon: Package, Editor: ProductsEditor },
@@ -22,6 +22,7 @@ const tabs = [
 const problems = (content: Content) => [
   ...content.products.filter(item => !item.name.trim()).map(() => 'Há um produto sem nome.'),
   ...content.products.filter(item => !content.categories.some(category => category.id === item.categoryId)).map(item => `O produto "${item.name}" está sem categoria.`),
+  ...content.products.filter(item => item.size && isGlassSize(item.size) && content.categories.find(category => category.id === item.categoryId)?.sizes?.includes(item.size)).map(item => `Informe quantos ml tem o produto "${item.name}".`),
   ...content.categories.filter(item => !item.name.trim()).map(() => 'Há uma categoria sem nome.'),
   ...content.aromas.filter(item => !item.name.trim()).map(() => 'Há um aroma sem nome.'),
   ...content.highlights.filter(item => !item.title.trim() || !item.text.trim()).map(item => `A novidade "${item.title || 'sem título'}" precisa de título e texto.`),

@@ -14,7 +14,8 @@ export const uniqueId = (text: string, taken: string[]) => {
   for (let n = 2; taken.includes(id); n++) id = `${base}-${n}`;
   return id;
 };
-export const money = (value: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+export const isGlassSize = (size: string) => slugify(size).startsWith('vidro');
+export const money =(value: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
 export const move = <T,>(list: T[], from: number, to: number) => {
   if (to < 0 || to >= list.length) return;
   const [item] = list.splice(from, 1);

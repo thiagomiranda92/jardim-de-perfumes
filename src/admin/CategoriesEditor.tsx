@@ -45,7 +45,7 @@ export function CategoriesEditor({ content, edit }: EditorProps) {
       </div>
       <div className="card">
         <h3>Tamanhos padrão</h3>
-        <p className="card-hint">Ao cadastrar um produto desta categoria, o tamanho é escolhido só entre estas opções. Deixe vazio quando não houver tamanho padrão (como em Vidros): aí o tamanho é digitado em cada produto.</p>
+        <p className="card-hint">Ao cadastrar um produto desta categoria, o tamanho é escolhido só entre estas opções. Um tamanho chamado “Vidro” não tem medida fixa: ao escolhê-lo, o produto pede quantos ml. Deixe a lista vazia quando a categoria não tiver tamanho padrão: aí o tamanho é digitado em cada produto.</p>
         <SizesField sizes={category.sizes ?? []} onChange={sizes => change(item => { if (sizes.length) item.sizes = sizes; else delete item.sizes; })}/>
       </div>
     </section>;
