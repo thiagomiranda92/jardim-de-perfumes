@@ -13,7 +13,12 @@
     {
       "id": "home-spray",
       "name": "Home spray",
-      "group": "Ambientes"
+      "group": "Ambientes",
+      "sizes": [
+        "40 ml",
+        "250 ml",
+        "vidro"
+      ]
     },
     {
       "id": "agua-lencois",
