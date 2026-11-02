@@ -22,11 +22,18 @@ O build executa a verificação de TypeScript e gera `dist/`.
 
 ## Publicação
 
-O site é publicado no GitHub Pages em <https://thiagomiranda92.github.io/jardim-de-perfumes/>. Cada envio para a branch `main` monta e atualiza o site automaticamente (`.github/workflows/deploy.yml`), portanto só envie para a `main` o que já pode ir ao ar. No repositório, **Settings → Pages → Source** deve estar em **GitHub Actions**. Com um domínio próprio, troque o `base` em `vite.config.ts` por `/`.
+O site é publicado no Vercel em <https://jardimdeperfumes.vercel.app> (raiz `/`) e no GitHub Pages em <https://thiagomiranda92.github.io/jardim-de-perfumes/>. Cada envio para a branch `main` monta e atualiza o site automaticamente (`.github/workflows/deploy.yml`), e o Vercel faz o mesmo a cada envio, portanto só envie para a `main` o que já pode ir ao ar. No repositório, **Settings → Pages → Source** deve estar em **GitHub Actions**. O `base` em `vite.config.ts` usa `/` quando o build roda no Vercel e `/jardim-de-perfumes/` nos demais casos.
+
+## Painel de administração
+
+Com `pnpm dev` rodando, o painel abre em <http://127.0.0.1:5173/adm>. Nele é possível cadastrar e alterar produtos, fotos, preços, aromas, promoções e kits, feiras e categorias. As alterações ficam em rascunho até **Salvar alterações**; então o painel grava `src/data/conteudo.json` e as fotos enviadas em `public/images/products/` (JPG de até 1086 px e a versão leve `-640.webp`). Para publicar, faça commit desses arquivos e envie para a `main`.
+
+Por enquanto o painel só existe na versão local: o build publicado não inclui `/adm`. O servidor local fica em `scripts/painel-local.ts` e atende `/api/conteudo` e `/api/fotos`; a versão online deverá atender as mesmas rotas, com login.
 
 ## Conteúdo
 
-- `src/data/catalog.ts`: categorias, futuros produtos, promoções e feiras.
+- `src/data/conteudo.json`: categorias, aromas, produtos, promoções e feiras, editados pelo painel.
+- `src/data/catalog.ts`: tipos do conteúdo e montagem dos dados usados pelas páginas.
 - `src/data/store.ts`: contatos e textos confirmados da marca.
 - `src/components/`: elementos reutilizáveis.
 - `src/styles/`: identidade visual e comportamento responsivo.
@@ -46,8 +53,10 @@ Difusor e Home spray já possuem os 21 aromas informados pelo usuário, incluind
 
 ## Adicionar fotografias e produtos
 
+O caminho mais simples é o painel de administração. Para editar à mão:
+
 1. Salve as fotografias reais em `public/images/products/`, em JPG (`.jpg`), com nomes descritivos, proporções consistentes e até aproximadamente 1600 pixels. Preserve a embalagem e evite cortes. Depois execute `pnpm fotos`, que gera a versão leve (`-640.webp`) usada no celular; sem ela, a foto não carrega corretamente.
-2. Em `src/data/catalog.ts`, acrescente um item à lista `products`, usando o `categoryId` de uma das categorias existentes.
+2. Em `src/data/conteudo.json`, acrescente um item à lista `products`, usando o `categoryId` de uma das categorias existentes.
 3. Preencha `id`, `name`, `categoryId` e `images`. Cada imagem usa `src` (caminho iniciado em `/images/products/`) e `alt` (descrição objetiva da foto).
 4. Adicione `price` como número em reais apenas quando confirmado. A página formata o valor automaticamente. Descrição, fragrância, tamanho e disponibilidade são opcionais.
 5. O aviso de fotos em breve de uma categoria na vitrine é substituído pelos produtos cadastrados nessa categoria. Ao clicar, uma janela de detalhes mostra as fotos, com miniaturas para alternar entre elas.
@@ -55,20 +64,20 @@ Difusor e Home spray já possuem os 21 aromas informados pelo usuário, incluind
 
 ## Vitrine
 
-A vitrine reúne as nove categorias em botões, um ao lado do outro. Cada categoria mostra seus produtos em cards com fotografia; difusor e home spray mostram um card por aroma com foto, e os demais aromas aparecem listados abaixo. Para incluir a foto de um aroma, cadastre as duas imagens em `fotosDosAromas`; `ordemDeDestaque`, em `src/data/catalog.ts`, define a ordem dos cards. Categorias sem produto cadastrado exibem um aviso de que as fotos serão adicionadas em breve.
+A vitrine reúne as nove categorias em botões, um ao lado do outro. Cada categoria mostra seus produtos em cards com fotografia; difusor e home spray mostram um card por aroma com foto, e os demais aromas aparecem listados abaixo. A foto de cada aroma fica na lista `aromas` do produto, em `src/data/conteudo.json`; `ordemDeDestaque`, no mesmo arquivo, define a ordem dos cards. Figurinhas de categorias excluídas deixam de aparecer. Categorias sem produto cadastrado exibem um aviso de que as fotos serão adicionadas em breve.
 
 As figurinhas sobre a faixa de aromas são ilustrações em `src/components/StickerShelf.tsx` e levam direto à categoria correspondente na vitrine; a lista `stickers` define o destino de cada uma. O desenho do aromatizador de carro e do escalda-pés é ilustrativo e deve ser revisado pela proprietária.
 
 ## Promoções e feiras
 
-Cadastre apenas informações confirmadas, em `src/data/catalog.ts`.
+Cadastre apenas informações confirmadas, pelo painel ou em `src/data/conteudo.json`.
 
-- `highlights`: promoções e kits de presente do carrossel. Cada item tem identificador, tipo (`Promoção` ou `Presente`), título, texto e, quando houver, validade e imagem. Enquanto a lista estiver vazia, o carrossel apresenta avisos transparentes de que os detalhes serão publicados posteriormente. Não há rotação automática.
+- `highlights`: promoções e kits de presente do carrossel. Cada item tem identificador, tipo (`Promoção`, `Kit` ou `Presente`), título, texto e, quando houver, validade e imagem. Enquanto a lista estiver vazia, o carrossel apresenta avisos transparentes de que os detalhes serão publicados posteriormente. Não há rotação automática.
 - `fairs`: feiras do calendário. Cada item tem identificador, data no formato `AAAA-MM-DD`, título, local e, quando houver, horário, endereço e observação. O dia fica marcado e, ao clicar, mostra os detalhes e o link para o mapa. O calendário abre no mês da próxima feira.
 
 ## Produtos por aroma
 
-Os nomes na faixa de aromas abrem uma tela com todos os produtos cadastrados naquele aroma. Para um produto aparecer nessa tela, inclua o aroma na lista `aromas` do produto, em `src/data/catalog.ts`.
+Os nomes na faixa de aromas abrem uma tela com todos os produtos cadastrados naquele aroma. Para um produto aparecer nessa tela, inclua o aroma na lista `aromas` do produto, em `src/data/conteudo.json` (no painel, marque o aroma no produto). Nos produtos, cada aroma guarda só o identificador; o nome vem da lista geral `aromas`.
 
 ## Lista de pedido
 

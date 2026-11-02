@@ -1,4 +1,5 @@
 import type { MouseEvent, ReactNode } from 'react';
+import { categories } from '../data/catalog';
 
 function DiffuserArt() {
   return <svg viewBox="0 0 100 130" aria-hidden="true">
@@ -64,7 +65,7 @@ const stickers: { categoryId: string; label: string; short?: string; alt: string
 
 export function StickerShelf({ onSelect }: { onSelect: (categoryId: string, event: MouseEvent<HTMLAnchorElement>) => void }) {
   return <nav className="sticker-shelf" aria-label="Atalhos para a vitrine">
-    {stickers.map((sticker, index) => <a key={sticker.categoryId} className="sticker" href="#colecao" aria-label={`Ver ${sticker.alt} na vitrine`} onClick={event => onSelect(sticker.categoryId, event)} style={{ '--i': index } as React.CSSProperties}>
+    {stickers.filter(sticker => categories.some(category => category.id === sticker.categoryId)).map((sticker, index) => <a key={sticker.categoryId} className="sticker" href="#colecao" aria-label={`Ver ${sticker.alt} na vitrine`} onClick={event => onSelect(sticker.categoryId, event)} style={{ '--i': index } as React.CSSProperties}>
       <span className="sticker-art"><span className="sticker-bob">{sticker.art}</span></span>
       <span className="sticker-label" aria-hidden="true"><span className="label-full">{sticker.label}</span><span className="label-short">{sticker.short ?? sticker.label}</span></span>
     </a>)}

@@ -7,7 +7,7 @@ const pending: Highlight[] = [
   { id: 'promocoes', kind: 'Promoção', title: 'As novidades florescem por aqui.', text: 'As promoções da Jardim de Perfumes serão anunciadas neste espaço. Enquanto isso, acompanhe nosso Instagram.' },
   { id: 'presentes', kind: 'Presente', title: 'Presentes feitos à mão.', text: 'Os kits e as sugestões de presente serão publicados neste espaço. Para combinar o seu, fale com a gente pelo Instagram.' },
 ];
-const eyebrow: Record<Highlight['kind'], string> = { 'Promoção': 'Novidades & promoções', 'Presente': 'Kits & presentes' };
+const eyebrow: Record<Highlight['kind'], string> = { 'Promoção': 'Novidades & promoções', 'Kit': 'Kits & presentes', 'Presente': 'Kits & presentes' };
 export function Highlights() {
   const slides = highlights.length ? highlights : pending;
   const [index, setIndex] = useState(0);

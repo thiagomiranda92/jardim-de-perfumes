@@ -1,14 +1,18 @@
 import { asset } from './photos';
+import conteudo from './conteudo.json';
 
+// Todo o conteúdo editável fica em conteudo.json, que o painel de administração (/adm) altera.
 export type Group = 'Ambientes' | 'Autocuidado' | 'Carro';
+export const groups: Group[] = ['Ambientes', 'Autocuidado', 'Carro'];
+export interface Photo { src: string; alt: string }
 export interface Category { id: string; name: string; group: Group; short?: string }
-export interface Aroma { id: string; name: string; images: { src: string; alt: string }[]; description?: string; price?: number; available?: boolean }
+export interface Aroma { id: string; name: string; images: Photo[]; description?: string; price?: number; available?: boolean }
 export interface Product {
   id: string;
   name: string;
   categoryId: string;
   description?: string; // Somente descrição aprovada pela proprietária.
-  images: { src: string; alt: string }[];
+  images: Photo[];
   price?: number; // Valor real em reais, nunca um preço demonstrativo.
   fragrance?: string;
   size?: string;
@@ -17,149 +21,43 @@ export interface Product {
   available?: boolean;
   featured?: boolean;
 }
-export const categories: Category[] = [
-  { id: 'difusores', name: 'Difusores', short: 'Difusor', group: 'Ambientes' },
-  { id: 'home-spray', name: 'Home spray', group: 'Ambientes' },
-  { id: 'agua-lencois', name: 'Água perfumada para lençóis', short: 'Água para lençóis', group: 'Ambientes' },
-  { id: 'saches', name: 'Sachês perfumados', short: 'Sachês', group: 'Ambientes' },
-  { id: 'escalda-pes-sal', name: 'Escalda-pés de sal', group: 'Autocuidado' },
-  { id: 'escalda-pes-efervescente', name: 'Escalda-pés efervescentes', group: 'Autocuidado' },
-  { id: 'sais-banho', name: 'Sais de banho', group: 'Autocuidado' },
-  { id: 'sabonetes', name: 'Sabonetes decorados com decoupage', short: 'Sabonetes', group: 'Autocuidado' },
-  { id: 'aromatizadores-carro', name: 'Aromatizadores de carro', group: 'Carro' },
-];
-const aromasDeAmbiente: Aroma[] = [
-  { id: 'lavanda', name: 'Lavanda', images: [] },
-  { id: 'acqua', name: 'Acqua', images: [] },
-  { id: 'cha-branco', name: 'Chá branco', images: [] },
-  { id: 'cha-verde', name: 'Chá verde', images: [] },
-  { id: 'rosa-branca', name: 'Rosa branca', images: [] },
-  { id: 'cereja-avela', name: 'Cereja e Avelã', images: [] },
-  { id: 'girassol', name: 'Girassol', images: [] },
-  { id: 'capim-limao', name: 'Capim-limão', images: [] },
-  { id: 'baboo', name: 'Baboo', images: [] },
-  { id: 'brisa-do-mar', name: 'Brisa do mar', images: [] },
-  { id: 'flor-de-cerejeira', name: 'Flor de Cerejeira', images: [] },
-  { id: 'martan', name: 'Martan', images: [] },
-  { id: 'especiaria-dourada', name: 'Especiaria dourada', images: [] },
-  { id: 'doce-encanto', name: 'Doce encanto', images: [] },
-  { id: 'vanilla-lemon', name: 'Vanilla lemon', images: [] },
-  { id: 'aconchego', name: 'Aconchego', images: [] },
-  { id: 'bons-fluidos', name: 'Bons Fluidos', images: [] },
-  { id: 'flor-de-figo', name: 'Flor de figo', images: [] },
-  { id: 'pistache', name: 'Pistache', images: [] },
-  { id: 'primavera', name: 'Primavera', images: [] },
-  { id: 'quebra-nozes', name: 'Quebra-Nozes', images: [] },
-];
 
-type ProdutoAromatico = 'difusor' | 'home-spray';
-type FotoDeProduto = { src: string; alt: string };
+// Promoções, kits e presentes exibidos no carrossel. Cadastre somente informações confirmadas.
+export type HighlightKind = 'Promoção' | 'Kit' | 'Presente';
+export const highlightKinds: HighlightKind[] = ['Promoção', 'Kit', 'Presente'];
+export interface Highlight { id: string; kind: HighlightKind; title: string; text: string; validity?: string; image?: Photo }
 
-const fotosDosAromas: Record<string, Record<ProdutoAromatico, FotoDeProduto>> = {
-  'flor-de-figo': {
-    difusor: {
-      src: '/images/products/flor-de-figo-difusor.jpg',
-      alt: 'Difusor Flor de Figo em frasco bordô decorado com pérolas.',
-    },
-    'home-spray': {
-      src: '/images/products/flor-de-figo-home-spray.jpg',
-      alt: 'Home spray Flor de Figo em frasco bordô decorado com pérolas.',
-    },
-  },
-  'bons-fluidos': {
-    difusor: {
-      src: '/images/products/bons-fluidos-difusor.jpg',
-      alt: 'Difusor Bons Fluidos em frasco rosé decorado com pérolas.',
-    },
-    'home-spray': {
-      src: '/images/products/bons-fluidos-home-spray.jpg',
-      alt: 'Home spray Bons Fluidos em frasco rosé decorado com pérolas.',
-    },
-  },
-  'cha-verde': {
-    difusor: {
-      src: '/images/products/cha-verde-difusor.jpg',
-      alt: 'Difusor Chá verde em frasco verde decorado com contas turquesa.',
-    },
-    'home-spray': {
-      src: '/images/products/cha-verde-home-spray.jpg',
-      alt: 'Home spray Chá verde em frasco verde decorado com contas turquesa.',
-    },
-  },
-  'flor-de-cerejeira': {
-    difusor: {
-      src: '/images/products/flor-de-cerejeira-difusor.jpg',
-      alt: 'Difusor Flor de Cerejeira em frasco rosado decorado com cristais.',
-    },
-    'home-spray': {
-      src: '/images/products/flor-de-cerejeira-home-spray.jpg',
-      alt: 'Home spray Flor de Cerejeira em frasco rosado decorado com cristais.',
-    },
-  },
-  martan: {
-    difusor: {
-      src: '/images/products/martan-difusor.jpg',
-      alt: 'Difusor Martan em frasco prateado decorado com pérolas.',
-    },
-    'home-spray': {
-      src: '/images/products/martan-home-spray.jpg',
-      alt: 'Home spray Martan em frasco prateado decorado com pérolas.',
-    },
-  },
-  'quebra-nozes': {
-    difusor: {
-      src: '/images/products/quebra-nozes-difusor.jpg',
-      alt: 'Difusor Quebra-Nozes em frasco âmbar decorado com pérolas.',
-    },
-    'home-spray': {
-      src: '/images/products/quebra-nozes-home-spray.jpg',
-      alt: 'Home spray Quebra-Nozes em frasco transparente decorado com pérolas.',
-    },
-  },
-  girassol: {
-    difusor: {
-      src: '/images/products/girassol-difusor.jpg',
-      alt: 'Frasco largo do aroma Girassol em tom âmbar, decorado com contas douradas.',
-    },
-    'home-spray': {
-      src: '/images/products/girassol-home-spray.jpg',
-      alt: 'Home spray Girassol em frasco âmbar decorado com pérolas.',
-    },
-  },
-};
+// Feiras exibidas no calendário. `date` usa o formato AAAA-MM-DD; o local gera o link para o mapa.
+export interface FairEvent { id: string; date: string; title: string; time?: string; location: string; address?: string; note?: string }
 
-const aromasComFotos = (produto: ProdutoAromatico): Aroma[] => aromasDeAmbiente.map(aroma => ({
-  ...aroma,
-  images: fotosDosAromas[aroma.id] ? [fotosDosAromas[aroma.id][produto]] : [],
-}));
+// Formato de conteudo.json: nos produtos, cada aroma guarda só o identificador, e o nome vem da lista `aromas`.
+export type StoredAroma = Omit<Aroma, 'name'>;
+export interface StoredProduct extends Omit<Product, 'aromas'> { aromas?: StoredAroma[] }
+export interface Content {
+  categories: Category[];
+  aromas: { id: string; name: string }[];
+  products: StoredProduct[];
+  ordemDeDestaque: string[];
+  highlights: Highlight[];
+  fairs: FairEvent[];
+}
 
-const comCaminho = (foto: FotoDeProduto): FotoDeProduto => ({ ...foto, src: asset(foto.src) });
+const dados = conteudo as Content;
+const comCaminho = (foto: Photo): Photo => ({ ...foto, src: asset(foto.src) });
 
-const produtos: Product[] = [
-  {
-    id: 'difusor',
-    name: 'Difusor',
-    categoryId: 'difusores',
-    images: [],
-    aromas: aromasComFotos('difusor'),
-  },
-  {
-    id: 'home-spray',
-    name: 'Home spray',
-    categoryId: 'home-spray',
-    images: [],
-    aromas: aromasComFotos('home-spray'),
-  },
-];
-export const products: Product[] = produtos.map(produto => ({
+export const categories = dados.categories;
+export const aromaList = dados.aromas;
+export const products: Product[] = dados.products.map(produto => ({
   ...produto,
   images: produto.images.map(comCaminho),
-  aromas: produto.aromas?.map(aroma => ({ ...aroma, images: aroma.images.map(comCaminho) })),
+  aromas: produto.aromas?.flatMap(aroma => {
+    const name = aromaList.find(item => item.id === aroma.id)?.name;
+    return name ? [{ ...aroma, name, images: aroma.images.map(comCaminho) }] : [];
+  }),
 }));
 
 // Ordem pensada para alternar as cores das fotografias na vitrine.
-export const ordemDeDestaque = ['martan', 'cha-verde', 'flor-de-figo', 'flor-de-cerejeira', 'bons-fluidos', 'girassol', 'quebra-nozes'];
-export const aromaList = aromasDeAmbiente.map(({ id, name }) => ({ id, name }));
+export const ordemDeDestaque = dados.ordemDeDestaque;
 // Todos os produtos disponíveis em um aroma, para a tela aberta pela faixa de aromas.
 export const productsWithAroma = (aromaId: string) => products.flatMap(product => {
   const aroma = product.aromas?.find(item => item.id === aromaId && item.available !== false);
@@ -167,11 +65,5 @@ export const productsWithAroma = (aromaId: string) => products.flatMap(product =
   return aroma && category && product.available !== false ? [{ product, aroma, category }] : [];
 });
 
-// Promoções e kits de presente exibidos no carrossel. Cadastre somente informações confirmadas.
-export interface Highlight { id: string; kind: 'Promoção' | 'Presente'; title: string; text: string; validity?: string; image?: { src: string; alt: string } }
-const destaques: Highlight[] = [];
-export const highlights: Highlight[] = destaques.map(destaque => destaque.image ? { ...destaque, image: comCaminho(destaque.image) } : destaque);
-
-// Feiras exibidas no calendário. `date` usa o formato AAAA-MM-DD; o local gera o link para o mapa.
-export interface FairEvent { id: string; date: string; title: string; time?: string; location: string; address?: string; note?: string }
-export const fairs: FairEvent[] = [];
+export const highlights: Highlight[] = dados.highlights.map(destaque => destaque.image ? { ...destaque, image: comCaminho(destaque.image) } : destaque);
+export const fairs = dados.fairs;
