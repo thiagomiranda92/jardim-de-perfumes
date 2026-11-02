@@ -4,7 +4,10 @@
       "id": "difusores",
       "name": "Difusores",
       "short": "Difusor",
-      "group": "Ambientes"
+      "group": "Ambientes",
+      "sizes": [
+        "150ml"
+      ]
     },
     {
       "id": "home-spray",
