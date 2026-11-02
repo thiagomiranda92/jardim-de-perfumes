@@ -24,7 +24,10 @@
       "id": "agua-lencois",
       "name": "Água perfumada para lençóis",
       "short": "Água para lençóis",
-      "group": "Ambientes"
+      "group": "Ambientes",
+      "sizes": [
+        "500 ml"
+      ]
     },
     {
       "id": "saches",
