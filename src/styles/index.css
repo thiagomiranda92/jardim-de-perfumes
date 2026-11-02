@@ -114,7 +114,9 @@ h1 span, h1 em { display: block; }
 @media (hover: none) {
   /* No toque, o estado de hover ficaria preso: a resposta visual vem do :active. */
   .button:hover, .order-toggle:hover, .calendar-day.has-fair:hover { transform: none; }
-  .aroma-card:hover img, .aroma-card:hover .aroma-caption svg { transform: none; }
+  .aroma-card:hover img, .aroma-card:hover .aroma-caption svg, .aroma-product-photo:hover img { transform: none; }
+  .marquee-item:hover { color: inherit; text-decoration: none; }
+  .marquee-item:active { color: var(--rose); }
   .quiz-options button:hover { transform: none; border-color: transparent; }
   .gallery-switch button:hover { background: var(--paper); }
   .gallery-switch button[aria-pressed=true]:hover { background: var(--forest); }
@@ -130,9 +132,11 @@ h1 span, h1 em { display: block; }
 }
 
 /* Faixa de aromas */
-.marquee { position: relative; z-index: 2; overflow: hidden; border-block: 1px solid var(--line); padding-block: 15px; background: var(--paper); }
+.marquee { position: relative; z-index: 2; overflow: hidden; border-block: 1px solid var(--line); padding-block: 8px; background: var(--paper); }
 .marquee-track { display: flex; width: max-content; animation: marquee 70s linear infinite; }
-.marquee:hover .marquee-track { animation-play-state: paused; }
+.marquee:hover .marquee-track, .marquee:focus-within .marquee-track, .marquee:active .marquee-track { animation-play-state: paused; }
+.marquee-item { min-height: 44px; padding: 4px 2px; border: 0; background: none; font: inherit; color: inherit; transition: color .2s; }
+.marquee-item:hover { color: var(--rose); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 5px; }
 .marquee-group { display: flex; flex-shrink: 0; }
 .marquee-group span { display: inline-flex; align-items: center; gap: 28px; padding-right: 28px; font-family: var(--serif); font-size: 1.5rem; font-style: italic; white-space: nowrap; color: var(--forest-soft); }
 .marquee-group svg { color: var(--rose); }
@@ -342,6 +346,24 @@ h1 span, h1 em { display: block; }
 .photo-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; height: 100%; min-height: 240px; color: var(--rose); font-size: .85rem; letter-spacing: .08em; }
 .photo-frame { display: grid; place-items: center; width: 64px; height: 64px; border: 1px solid var(--blush-deep); border-radius: 50%; }
 
+/* Produtos de um aroma */
+.aroma-dialog { position: fixed; inset: 0; margin: auto; width: min(760px, calc(100% - 48px)); height: fit-content; max-height: calc(100dvh - 48px); padding: clamp(20px, 3vw, 36px); overflow: auto; overscroll-behavior: contain; border: 0; border-radius: 16px; background: var(--paper); color: var(--ink); box-shadow: 0 40px 120px rgb(30 44 35 / .35); animation: rise .45s var(--ease) both; }
+.aroma-dialog::backdrop { background: rgb(30 44 35 / .55); backdrop-filter: blur(5px); }
+.aroma-dialog-head { padding-right: 52px; margin-bottom: 22px; }
+.aroma-dialog-head .eyebrow { margin-bottom: 8px; }
+.aroma-dialog-head h2 { font-size: clamp(2.5rem, 6vw, 3.8rem); }
+.aroma-dialog-head > p:last-child { margin-top: 8px; color: var(--muted); }
+.aroma-dialog-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(14px, 2.4vw, 24px); }
+.aroma-product { display: flex; flex-direction: column; align-items: flex-start; min-width: 0; }
+.aroma-product-photo { display: block; width: 100%; aspect-ratio: 4 / 5; padding: 0; overflow: hidden; border: 0; border-radius: 10px; background: var(--blush); }
+.aroma-product-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform .8s var(--ease); }
+.aroma-product-photo:hover img { transform: scale(1.04); }
+.aroma-product h3 { margin-block: 12px 10px; font-size: clamp(1.45rem, 3vw, 1.9rem); line-height: 1.1; }
+.aroma-product .button { width: 100%; min-height: 48px; padding: 10px 14px; font-size: .9rem; }
+.aroma-product .text-link { align-self: center; margin-top: 6px; border: 0; font-size: .9rem; }
+.aroma-dialog-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 18px; margin-top: 20px; padding-top: 14px; border-top: 1px solid var(--line); font-size: .95rem; color: var(--muted); }
+.aroma-dialog-foot .text-link { color: var(--ink); }
+
 /* Entradas */
 .can-reveal [data-reveal] { opacity: 0; transform: translateY(26px); transition: opacity .9s var(--ease), transform .9s var(--ease); transition-delay: var(--d, 0ms); }
 .can-reveal [data-reveal].is-visible { opacity: 1; transform: none; }
@@ -383,6 +405,8 @@ h1 span, h1 em { display: block; }
   .quiz-card { min-height: 0; }
   .about { grid-template-columns: 1fr; }
   .about-photo { width: min(80%, 420px); margin-inline: auto; }
+  .aroma-dialog { width: 100%; height: 100dvh; max-width: 100%; max-height: 100dvh; padding: 0 clamp(16px, 4vw, 32px) max(20px, env(safe-area-inset-bottom)); border-radius: 0; animation: sheet-up .4s var(--ease) both; }
+  .aroma-dialog-head { padding-top: 20px; }
   /* Detalhes em tela cheia: a foto fica fixa no topo e o botão de adicionar, sempre ao alcance. */
   .product-dialog { width: 100%; max-width: 100%; height: 100dvh; max-height: 100dvh; padding: 0 clamp(16px, 4vw, 32px) max(20px, env(safe-area-inset-bottom)); border-radius: 0; animation: sheet-up .4s var(--ease) both; }
   .details-close { top: 10px; margin-top: 10px; margin-bottom: -56px; box-shadow: 0 4px 14px rgb(44 36 32 / .2); }

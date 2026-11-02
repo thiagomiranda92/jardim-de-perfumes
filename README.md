@@ -18,7 +18,11 @@ pnpm build
 pnpm preview
 ```
 
-O build executa a verificação de TypeScript e gera `dist/`. Vercel futuramente: framework Vite, comando `pnpm build`, saída `dist`. Publicar somente após autorização.
+O build executa a verificação de TypeScript e gera `dist/`.
+
+## Publicação
+
+O site é publicado no GitHub Pages em <https://thiagomiranda92.github.io/jardim-de-perfumes/>. Cada envio para a branch `main` monta e atualiza o site automaticamente (`.github/workflows/deploy.yml`), portanto só envie para a `main` o que já pode ir ao ar. No repositório, **Settings → Pages → Source** deve estar em **GitHub Actions**. Com um domínio próprio, troque o `base` em `vite.config.ts` por `/`.
 
 ## Conteúdo
 
@@ -61,6 +65,10 @@ Cadastre apenas informações confirmadas, em `src/data/catalog.ts`.
 
 - `highlights`: promoções e kits de presente do carrossel. Cada item tem identificador, tipo (`Promoção` ou `Presente`), título, texto e, quando houver, validade e imagem. Enquanto a lista estiver vazia, o carrossel apresenta avisos transparentes de que os detalhes serão publicados posteriormente. Não há rotação automática.
 - `fairs`: feiras do calendário. Cada item tem identificador, data no formato `AAAA-MM-DD`, título, local e, quando houver, horário, endereço e observação. O dia fica marcado e, ao clicar, mostra os detalhes e o link para o mapa. O calendário abre no mês da próxima feira.
+
+## Produtos por aroma
+
+Os nomes na faixa de aromas abrem uma tela com todos os produtos cadastrados naquele aroma. Para um produto aparecer nessa tela, inclua o aroma na lista `aromas` do produto, em `src/data/catalog.ts`.
 
 ## Lista de pedido
 

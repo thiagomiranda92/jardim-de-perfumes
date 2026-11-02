@@ -1,3 +1,5 @@
+import { asset } from './photos';
+
 export type Group = 'Ambientes' | 'Autocuidado' | 'Carro';
 export interface Category { id: string; name: string; group: Group; short?: string }
 export interface Aroma { id: string; name: string; images: { src: string; alt: string }[]; description?: string; price?: number; available?: boolean }
@@ -131,7 +133,9 @@ const aromasComFotos = (produto: ProdutoAromatico): Aroma[] => aromasDeAmbiente.
   images: fotosDosAromas[aroma.id] ? [fotosDosAromas[aroma.id][produto]] : [],
 }));
 
-export const products: Product[] = [
+const comCaminho = (foto: FotoDeProduto): FotoDeProduto => ({ ...foto, src: asset(foto.src) });
+
+const produtos: Product[] = [
   {
     id: 'difusor',
     name: 'Difusor',
@@ -147,14 +151,26 @@ export const products: Product[] = [
     aromas: aromasComFotos('home-spray'),
   },
 ];
+export const products: Product[] = produtos.map(produto => ({
+  ...produto,
+  images: produto.images.map(comCaminho),
+  aromas: produto.aromas?.map(aroma => ({ ...aroma, images: aroma.images.map(comCaminho) })),
+}));
 
 // Ordem pensada para alternar as cores das fotografias na vitrine.
 export const ordemDeDestaque = ['martan', 'cha-verde', 'flor-de-figo', 'flor-de-cerejeira', 'bons-fluidos', 'girassol', 'quebra-nozes'];
-export const aromaNames = aromasDeAmbiente.map(aroma => aroma.name);
+export const aromaList = aromasDeAmbiente.map(({ id, name }) => ({ id, name }));
+// Todos os produtos disponíveis em um aroma, para a tela aberta pela faixa de aromas.
+export const productsWithAroma = (aromaId: string) => products.flatMap(product => {
+  const aroma = product.aromas?.find(item => item.id === aromaId && item.available !== false);
+  const category = categories.find(item => item.id === product.categoryId);
+  return aroma && category && product.available !== false ? [{ product, aroma, category }] : [];
+});
 
 // Promoções e kits de presente exibidos no carrossel. Cadastre somente informações confirmadas.
 export interface Highlight { id: string; kind: 'Promoção' | 'Presente'; title: string; text: string; validity?: string; image?: { src: string; alt: string } }
-export const highlights: Highlight[] = [];
+const destaques: Highlight[] = [];
+export const highlights: Highlight[] = destaques.map(destaque => destaque.image ? { ...destaque, image: comCaminho(destaque.image) } : destaque);
 
 // Feiras exibidas no calendário. `date` usa o formato AAAA-MM-DD; o local gera o link para o mapa.
 export interface FairEvent { id: string; date: string; title: string; time?: string; location: string; address?: string; note?: string }

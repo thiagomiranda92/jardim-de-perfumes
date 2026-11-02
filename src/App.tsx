@@ -1,10 +1,11 @@
 import { useEffect, useState, type MouseEvent } from 'react';
 import { ArrowDown, ArrowUpRight, Flower2, Leaf, MapPin, Menu, X } from 'lucide-react';
 import { store } from './data/store';
-import { fullSizes, photoSrcSet } from './data/photos';
-import { aromaNames, categories } from './data/catalog';
+import { asset, fullSizes, photoSrcSet } from './data/photos';
+import { aromaList, categories } from './data/catalog';
 import { useOrderList } from './hooks/useOrderList';
 import { useReveal } from './hooks/useReveal';
+import { AromaDialog } from './components/AromaDialog';
 import { AromaQuiz } from './components/AromaQuiz';
 import { OrderList } from './components/OrderList';
 import { Catalog } from './components/Catalog';
@@ -24,6 +25,7 @@ export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [selection, setSelection] = useState<Selection>();
+  const [aromaId, setAromaId] = useState<string>();
   const [categoryId, setCategoryId] = useState(categories[0].id);
   const [query, setQuery] = useState('');
   const order = useOrderList();
@@ -80,8 +82,8 @@ export default function App() {
           </div>
         </div>
         <div className="hero-visual">
-          <figure className="hero-photo"><img src="/images/products/bons-fluidos-difusor.jpg" srcSet={photoSrcSet('/images/products/bons-fluidos-difusor.jpg')} sizes={fullSizes} alt="Difusor Bons Fluidos em frasco rosé decorado com pérolas, sobre uma mesa de madeira diante de samambaias." width="1086" height="1448" fetchPriority="high"/></figure>
-          <figure className="hero-photo-small"><img src="/images/products/flor-de-figo-difusor-640.webp" alt="Difusor Flor de Figo em frasco bordô decorado com pérolas, sobre bandeja rosé." width="640" height="640"/></figure>
+          <figure className="hero-photo"><img src={asset('/images/products/bons-fluidos-difusor.jpg')} srcSet={photoSrcSet(asset('/images/products/bons-fluidos-difusor.jpg'))} sizes={fullSizes} alt="Difusor Bons Fluidos em frasco rosé decorado com pérolas, sobre uma mesa de madeira diante de samambaias." width="1086" height="1448" fetchPriority="high"/></figure>
+          <figure className="hero-photo-small"><img src={asset('/images/products/flor-de-figo-difusor-640.webp')} alt="Difusor Flor de Figo em frasco bordô decorado com pérolas, sobre bandeja rosé." width="640" height="640"/></figure>
           <svg className="hero-seal" viewBox="0 0 120 120" aria-hidden="true">
             <defs><path id="seal-path" d="M60 60m-44 0a44 44 0 1 1 88 0a44 44 0 1 1-88 0"/></defs>
             <text><textPath href="#seal-path">feito à mão · produção artesanal · </textPath></text>
@@ -90,11 +92,11 @@ export default function App() {
       </section>
       <div className="sticker-stage">
         <StickerShelf onSelect={openCategory}/>
-        <div className="marquee" aria-label={`Aromas: ${aromaNames.join(', ')}`} role="img">
-          <div className="marquee-track" aria-hidden="true">
-            {[0, 1].map(copy => <div className="marquee-group" key={copy}>{aromaNames.map(name => <span key={name}>{name}<Flower2 size={15} strokeWidth={1.4}/></span>)}</div>)}
+        <nav className="marquee" aria-label="Ver produtos por aroma">
+          <div className="marquee-track">
+            {[0, 1].map(copy => <div className="marquee-group" key={copy} aria-hidden={copy === 1 ? true : undefined}>{aromaList.map(aroma => <span key={aroma.id}><button className="marquee-item" aria-haspopup="dialog" tabIndex={copy === 1 ? -1 : undefined} onClick={() => setAromaId(aroma.id)}>{aroma.name}</button><Flower2 size={15} strokeWidth={1.4} aria-hidden="true"/></span>)}</div>)}
           </div>
-        </div>
+        </nav>
       </div>
       <Highlights/>
       <Catalog categoryId={categoryId} onCategoryChange={setCategoryId} query={query} onQueryChange={setQuery} onOpen={setSelection} onAdd={order.add}/>
@@ -113,7 +115,7 @@ export default function App() {
         </div>
       </section>
       <section id="sobre" className="about shell">
-        <div className="about-photo" data-reveal><img src="/images/products/flor-de-cerejeira-home-spray.jpg" srcSet={photoSrcSet('/images/products/flor-de-cerejeira-home-spray.jpg')} sizes={fullSizes} alt="Home spray Flor de Cerejeira em frasco rosado decorado com cristais." loading="lazy" width="1086" height="1448"/></div>
+        <div className="about-photo" data-reveal><img src={asset('/images/products/flor-de-cerejeira-home-spray.jpg')} srcSet={photoSrcSet(asset('/images/products/flor-de-cerejeira-home-spray.jpg'))} sizes={fullSizes} alt="Home spray Flor de Cerejeira em frasco rosado decorado com cristais." loading="lazy" width="1086" height="1448"/></div>
         <div className="about-copy">
           <img className="about-logo" src={store.logo} alt="Logotipo Jardim de Perfumes com rosas e folhagens" loading="lazy" width="1600" height="1351" data-reveal/>
           <p className="eyebrow" data-reveal>Por trás dos aromas</p>
@@ -126,7 +128,7 @@ export default function App() {
         </div>
       </section>
       <section id="contato" className="contact">
-        <img src="/images/products/martan-difusor.jpg" srcSet={photoSrcSet('/images/products/martan-difusor.jpg')} sizes="100vw" alt="" loading="lazy" width="1086" height="1448"/>
+        <img src={asset('/images/products/martan-difusor.jpg')} srcSet={photoSrcSet(asset('/images/products/martan-difusor.jpg'))} sizes="100vw" alt="" loading="lazy" width="1086" height="1448"/>
         <div className="contact-inner shell">
           <p className="eyebrow" data-reveal>Vamos conversar?</p>
           <h2 data-reveal>Encontre seu próximo <em>aroma favorito.</em></h2>
@@ -147,6 +149,7 @@ export default function App() {
       </div>
     </footer>
     {selection && <ProductDetails selection={selection} onClose={() => setSelection(undefined)} onAdd={order.add}/>}
+    {aromaId && <AromaDialog aromaId={aromaId} onClose={() => setAromaId(undefined)} onOpen={setSelection} onAdd={order.add}/>}
     <OrderList items={order.items} count={order.count} onQuantityChange={order.setQuantity}/>
   </>;
 }
