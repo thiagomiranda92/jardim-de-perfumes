@@ -280,6 +280,7 @@ h1 span, h1 em { display: block; }
 .highlight-copy h2 { font-size: clamp(2rem, 3.6vw, 3.1rem); }
 .highlight-copy > p:not(.eyebrow) { max-width: 36rem; margin-top: 12px; color: var(--muted); }
 .highlight-copy .text-link { margin-top: 14px; }
+.highlight-copy > p.highlight-price { font-family: var(--serif); font-size: 1.9rem; line-height: 1.1; color: var(--rose); }
 .carousel-controls { display: flex; align-items: center; gap: 10px; white-space: nowrap; font-size: .9rem; }
 .carousel-controls > span { margin-right: 8px; }
 .carousel-controls .icon-button { border-color: var(--blush-deep); }

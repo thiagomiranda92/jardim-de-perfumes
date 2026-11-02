@@ -26,7 +26,7 @@ export interface Product {
 // Promoções, kits e presentes exibidos no carrossel. Cadastre somente informações confirmadas.
 export type HighlightKind = 'Promoção' | 'Kit' | 'Presente';
 export const highlightKinds: HighlightKind[] = ['Promoção', 'Kit', 'Presente'];
-export interface Highlight { id: string; kind: HighlightKind; title: string; text: string; validity?: string; image?: Photo }
+export interface Highlight { id: string; kind: HighlightKind; title: string; text: string; price?: number; validity?: string; image?: Photo }
 
 // Feiras exibidas no calendário. `date` usa o formato AAAA-MM-DD; o local gera o link para o mapa.
 export interface FairEvent { id: string; date: string; title: string; time?: string; location: string; address?: string; note?: string }
