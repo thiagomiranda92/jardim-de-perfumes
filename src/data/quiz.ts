@@ -26,7 +26,7 @@ export const perfilDosAromas: Record<string, { clima: Clima; familia: Familia }>
 export const perguntaProduto = {
   title: 'Como você gosta de perfumar a casa?',
   options: [
-    { value: 'difusor', label: 'Aos poucos, ao longo do dia' },
+    { value: 'difusores', label: 'Aos poucos, ao longo do dia' },
     { value: 'home-spray', label: 'Na hora, com algumas borrifadas' },
   ],
 };

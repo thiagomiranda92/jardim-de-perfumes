@@ -28,7 +28,7 @@ export function AromaDialog({ aromaId, onClose, onOpen, onAdd }: AromaDialogProp
     </header>
     <div className="aroma-dialog-grid">
       {items.map(({ product, aroma, category }) => {
-        const label = `${product.name} · ${aroma.name}`;
+        const label = product.aromas?.length ? `${product.name} · ${aroma.name}` : product.name;
         const isAdded = added.includes(label);
         const photo = aroma.images[0];
         return <article key={product.id} className="aroma-product">

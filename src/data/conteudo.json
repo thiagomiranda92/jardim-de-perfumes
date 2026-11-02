@@ -166,7 +166,176 @@
       "name": "Quebra-Nozes"
     }
   ],
-  "products": [],
+  "products": [
+    {
+      "id": "difusor-martan",
+      "name": "Difusor Martan",
+      "categoryId": "difusores",
+      "images": [
+        {
+          "src": "/images/products/martan-difusor.jpg",
+          "alt": "Difusor Martan em frasco prateado decorado com pérolas."
+        }
+      ],
+      "fragrance": "Martan"
+    },
+    {
+      "id": "difusor-cha-verde",
+      "name": "Difusor Chá verde",
+      "categoryId": "difusores",
+      "images": [
+        {
+          "src": "/images/products/cha-verde-difusor.jpg",
+          "alt": "Difusor Chá verde em frasco verde decorado com contas turquesa."
+        }
+      ],
+      "fragrance": "Chá verde"
+    },
+    {
+      "id": "difusor-flor-de-figo",
+      "name": "Difusor Flor de figo",
+      "categoryId": "difusores",
+      "images": [
+        {
+          "src": "/images/products/flor-de-figo-difusor.jpg",
+          "alt": "Difusor Flor de Figo em frasco bordô decorado com pérolas."
+        }
+      ],
+      "fragrance": "Flor de figo"
+    },
+    {
+      "id": "difusor-flor-de-cerejeira",
+      "name": "Difusor Flor de Cerejeira",
+      "categoryId": "difusores",
+      "images": [
+        {
+          "src": "/images/products/flor-de-cerejeira-difusor.jpg",
+          "alt": "Difusor Flor de Cerejeira em frasco rosado decorado com cristais."
+        }
+      ],
+      "fragrance": "Flor de Cerejeira"
+    },
+    {
+      "id": "difusor-bons-fluidos",
+      "name": "Difusor Bons Fluidos",
+      "categoryId": "difusores",
+      "images": [
+        {
+          "src": "/images/products/bons-fluidos-difusor.jpg",
+          "alt": "Difusor Bons Fluidos em frasco rosé decorado com pérolas."
+        }
+      ],
+      "fragrance": "Bons Fluidos"
+    },
+    {
+      "id": "difusor-girassol",
+      "name": "Difusor Girassol",
+      "categoryId": "difusores",
+      "images": [
+        {
+          "src": "/images/products/girassol-difusor.jpg",
+          "alt": "Frasco largo do aroma Girassol em tom âmbar, decorado com contas douradas."
+        }
+      ],
+      "fragrance": "Girassol"
+    },
+    {
+      "id": "difusor-quebra-nozes",
+      "name": "Difusor Quebra-Nozes",
+      "categoryId": "difusores",
+      "images": [
+        {
+          "src": "/images/products/quebra-nozes-difusor.jpg",
+          "alt": "Difusor Quebra-Nozes em frasco âmbar decorado com pérolas."
+        }
+      ],
+      "fragrance": "Quebra-Nozes"
+    },
+    {
+      "id": "home-spray-martan",
+      "name": "Home spray Martan",
+      "categoryId": "home-spray",
+      "images": [
+        {
+          "src": "/images/products/martan-home-spray.jpg",
+          "alt": "Home spray Martan em frasco prateado decorado com pérolas."
+        }
+      ],
+      "fragrance": "Martan"
+    },
+    {
+      "id": "home-spray-cha-verde",
+      "name": "Home spray Chá verde",
+      "categoryId": "home-spray",
+      "images": [
+        {
+          "src": "/images/products/cha-verde-home-spray.jpg",
+          "alt": "Home spray Chá verde em frasco verde decorado com contas turquesa."
+        }
+      ],
+      "fragrance": "Chá verde"
+    },
+    {
+      "id": "home-spray-flor-de-figo",
+      "name": "Home spray Flor de figo",
+      "categoryId": "home-spray",
+      "images": [
+        {
+          "src": "/images/products/flor-de-figo-home-spray.jpg",
+          "alt": "Home spray Flor de Figo em frasco bordô decorado com pérolas."
+        }
+      ],
+      "fragrance": "Flor de figo"
+    },
+    {
+      "id": "home-spray-flor-de-cerejeira",
+      "name": "Home spray Flor de Cerejeira",
+      "categoryId": "home-spray",
+      "images": [
+        {
+          "src": "/images/products/flor-de-cerejeira-home-spray.jpg",
+          "alt": "Home spray Flor de Cerejeira em frasco rosado decorado com cristais."
+        }
+      ],
+      "fragrance": "Flor de Cerejeira"
+    },
+    {
+      "id": "home-spray-bons-fluidos",
+      "name": "Home spray Bons Fluidos",
+      "categoryId": "home-spray",
+      "images": [
+        {
+          "src": "/images/products/bons-fluidos-home-spray.jpg",
+          "alt": "Home spray Bons Fluidos em frasco rosé decorado com pérolas."
+        }
+      ],
+      "fragrance": "Bons Fluidos"
+    },
+    {
+      "id": "home-spray-girassol",
+      "name": "Home spray Girassol",
+      "categoryId": "home-spray",
+      "images": [
+        {
+          "src": "/images/products/girassol-home-spray.jpg",
+          "alt": "Home spray Girassol em frasco âmbar decorado com pérolas."
+        }
+      ],
+      "fragrance": "Girassol"
+    },
+    {
+      "id": "home-spray-quebra-nozes",
+      "name": "Home spray Quebra-Nozes",
+      "categoryId": "home-spray",
+      "images": [
+        {
+          "src": "/images/products/quebra-nozes-home-spray.jpg",
+          "alt": "Home spray Quebra-Nozes em frasco transparente decorado com pérolas."
+        }
+      ],
+      "fragrance": "Quebra-Nozes"
+    }
+  ],
   "ordemDeDestaque": [
     "martan",
     "cha-verde",

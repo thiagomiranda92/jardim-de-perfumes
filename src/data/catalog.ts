@@ -60,11 +60,19 @@ export const products: Product[] = dados.products.map(produto => ({
 // Ordem pensada para alternar as cores das fotografias na vitrine.
 export const ordemDeDestaque = dados.ordemDeDestaque;
 // Todos os produtos disponíveis em um aroma, para a tela aberta pela faixa de aromas.
-export const productsWithAroma = (aromaId: string) => products.flatMap(product => {
-  const aroma = product.aromas?.find(item => item.id === aromaId && item.available !== false);
-  const category = categories.find(item => item.id === product.categoryId);
-  return aroma && category && product.available !== false ? [{ product, aroma, category }] : [];
-});
+// Produtos sem lista de aromas entram quando o campo de aroma (`fragrance`) tem o nome do aroma.
+const normalizar = (texto = '') => texto.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
+export const productsWithAroma = (aromaId: string) => {
+  const name = aromaList.find(item => item.id === aromaId)?.name ?? '';
+  return products.flatMap(product => {
+    const category = categories.find(item => item.id === product.categoryId);
+    if (!category || product.available === false) return [];
+    const aroma = product.aromas?.length
+      ? product.aromas.find(item => item.id === aromaId && item.available !== false)
+      : name && normalizar(product.fragrance) === normalizar(name) ? { id: aromaId, name, images: product.images } : undefined;
+    return aroma ? [{ product, aroma, category }] : [];
+  });
+};
 
 export const highlights: Highlight[] = dados.highlights.map(destaque => destaque.image ? { ...destaque, image: comCaminho(destaque.image) } : destaque);
 export const fairs = dados.fairs;
