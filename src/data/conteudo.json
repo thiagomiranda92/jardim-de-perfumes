@@ -177,5 +177,15 @@
     "quebra-nozes"
   ],
   "highlights": [],
-  "fairs": []
+  "fairs": [
+    {
+      "id": "feira-2026-11-02",
+      "date": "2026-11-10",
+      "title": "feira terte",
+      "location": "Rua Bananal",
+      "time": "10 as 11",
+      "address": "44",
+      "note": "nada"
+    }
+  ]
 }
