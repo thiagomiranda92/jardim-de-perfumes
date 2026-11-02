@@ -1,8 +1,7 @@
 import { useId, useRef, useState, type ReactNode } from 'react';
 import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, ImagePlus, Loader2, Trash2 } from 'lucide-react';
 import type { Content, Photo } from '../data/catalog';
-import { asset } from '../data/photos';
-import { uploadPhoto } from './api';
+import { photoUrl, uploadPhoto } from './api';
 
 // Cada tela do painel recebe o rascunho e uma função que o altera; nada vai ao site antes de "Salvar alterações".
 export type Edit = (change: (draft: Content) => void) => void;
@@ -58,7 +57,7 @@ export function Toggle({ label, checked, onChange }: { label: string; checked: b
 }
 
 export function Thumb({ photo }: { photo?: Photo }) {
-  return <span className="thumb">{photo && <img src={asset(photo.src)} alt="" loading="lazy"/>}</span>;
+  return <span className="thumb">{photo && <img src={photoUrl(photo.src)} alt="" loading="lazy"/>}</span>;
 }
 
 export function PhotoList({ photos, onChange, name, max }: { photos: Photo[]; onChange: (photos: Photo[]) => void; name: string; max?: number }) {
@@ -91,7 +90,7 @@ export function PhotoList({ photos, onChange, name, max }: { photos: Photo[]; on
   return <div className="photo-list">
     {photos.length > 0 && <ul>
       {photos.map((photo, index) => <li key={photo.src}>
-        <img src={asset(photo.src)} alt=""/>
+        <img src={photoUrl(photo.src)} alt=""/>
         <div className="photo-tools">
           {photos.length > 1 && <>
             <button type="button" className="mini-button" aria-label="Mover foto para a esquerda" disabled={index === 0} onClick={() => update(index, list => move(list, index, index - 1))}><ArrowLeft size={15}/></button>

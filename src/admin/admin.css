@@ -32,6 +32,10 @@ img { display: block; max-width: 100%; }
 .admin-brand small { display: block; margin-top: 4px; font-family: var(--sans); font-size: .7rem; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; color: var(--rose); }
 .view-site { display: inline-flex; align-items: center; gap: 4px; font-size: .9rem; color: var(--muted); }
 .view-site:hover { color: var(--rose); }
+.top-links { display: flex; align-items: center; gap: 18px; }
+.login { max-width: 420px; margin: 32px auto; }
+.login .button { width: 100%; }
+.notice .button { justify-self: start; }
 .admin-tabs { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; padding-top: 8px; }
 .admin-tabs::-webkit-scrollbar { display: none; }
 .admin-tabs button { display: inline-flex; align-items: center; gap: 7px; flex-shrink: 0; padding: 10px 12px 12px; font-size: .92rem; color: var(--muted); border-bottom: 2px solid transparent; }

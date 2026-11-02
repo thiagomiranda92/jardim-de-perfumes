@@ -1,5 +1,5 @@
 // Durante o `pnpm dev`, o painel /adm salva por aqui direto nos arquivos do projeto.
-// Na publicação, as mesmas rotas (/api/conteudo e /api/fotos) serão atendidas pelo servidor online.
+// No Vercel, as mesmas rotas são atendidas pelas funções em api/, com login, gravando no GitHub.
 import { randomBytes } from 'node:crypto';
 import { readFile, writeFile } from 'node:fs/promises';
 import type { IncomingMessage, ServerResponse } from 'node:http';
@@ -37,7 +37,8 @@ export function painelLocal(): Plugin {
         try {
           if (req.method === 'GET') return responder(res, 200, JSON.parse(await readFile(arquivoDeConteudo, 'utf8')));
           if (req.method !== 'PUT') return responder(res, 405, { erro: 'Método não permitido.' });
-          const conteudo = JSON.parse((await lerCorpo(req)).toString('utf8'));
+          // As fotos já foram gravadas em public/ no envio; aqui só interessa o conteúdo.
+          const { content: conteudo } = JSON.parse((await lerCorpo(req)).toString('utf8'));
           if (!listas.every(chave => Array.isArray(conteudo?.[chave]))) return responder(res, 400, { erro: 'Conteúdo incompleto.' });
           await writeFile(arquivoDeConteudo, JSON.stringify(conteudo, null, 2) + '\n');
           responder(res, 200, { ok: true });
