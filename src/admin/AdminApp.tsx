@@ -56,6 +56,7 @@ function LoginForm({ expired, onDone }: { expired: boolean; onDone: () => void }
 
 export function AdminApp() {
   const [saved, setSaved] = useState<Content>();
+  const [contentVersion, setContentVersion] = useState<string>();
   const [draft, setDraft] = useState<Content>();
   const [loadError, setLoadError] = useState<string>();
   const [needsLogin, setNeedsLogin] = useState(false);
@@ -65,7 +66,7 @@ export function AdminApp() {
 
   const load = useCallback(() => {
     setLoadError(undefined);
-    loadContent().then(content => { setSaved(content); setDraft(content); setNeedsLogin(false); }, error => {
+    loadContent().then(({ content, version }) => { setSaved(content); setDraft(content); setContentVersion(version); setNeedsLogin(false); }, error => {
       if (error instanceof ApiError && error.status === 401) setNeedsLogin(true);
       else setLoadError(error.message);
     });
@@ -97,7 +98,7 @@ export function AdminApp() {
     if (found.length) return setStatus({ kind: 'error', message: [...new Set(found)].join(' ') });
     setStatus({ kind: 'saving' });
     try {
-      await saveContent(draft!);
+      setContentVersion(await saveContent(draft!, contentVersion!));
       setSaved(draft);
       setStatus({ kind: 'saved' });
     } catch (error) {

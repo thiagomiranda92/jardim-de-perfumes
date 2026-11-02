@@ -57,20 +57,29 @@ export async function github(caminho: string, init: RequestInit = {}) {
   return resposta;
 }
 
-export const lerConteudo = async () =>
-  (await github(`/contents/${arquivoDeConteudo}?ref=${ramo}`, { headers: { Accept: 'application/vnd.github.raw+json' } })).json();
+// A versão do conteúdo é o identificador (sha) do arquivo no Git: muda a cada salvamento.
+export const versaoDe = (texto: string) => createHash('sha1').update(`blob ${Buffer.byteLength(texto)}\0`).update(texto).digest('hex');
+export class ConteudoDesatualizado extends Error {}
+
+export async function lerConteudo(ref = ramo) {
+  const { sha, content } = await (await github(`/contents/${arquivoDeConteudo}?ref=${ref}`)).json();
+  return { content: JSON.parse(Buffer.from(content, 'base64').toString('utf8')), version: sha as string };
+}
 
 // Grava o conteúdo e as fotos novas num único commit, para o Vercel publicar uma vez só.
-export async function gravar(conteudo: unknown, fotos: { path: string; sha: string }[]) {
+// Recusa o envio se o conteúdo mudou desde que o painel foi aberto, para não apagar o que outra página salvou.
+export async function gravar(conteudo: unknown, fotos: { path: string; sha: string }[], versao: string) {
+  const texto = JSON.stringify(conteudo, null, 2) + '\n';
   for (let tentativa = 0; ; tentativa++) {
     const { object } = await (await github(`/git/ref/heads/${ramo}`)).json();
+    if ((await lerConteudo(object.sha)).version !== versao) throw new ConteudoDesatualizado();
     const { tree } = await (await github(`/git/commits/${object.sha}`)).json();
     const arvore = await (await github('/git/trees', {
       method: 'POST',
       body: JSON.stringify({
         base_tree: tree.sha,
         tree: [
-          { path: arquivoDeConteudo, mode: '100644', type: 'blob', content: JSON.stringify(conteudo, null, 2) + '\n' },
+          { path: arquivoDeConteudo, mode: '100644', type: 'blob', content: texto },
           ...fotos.map(foto => ({ path: foto.path, mode: '100644', type: 'blob', sha: foto.sha })),
         ],
       }),
@@ -81,7 +90,7 @@ export async function gravar(conteudo: unknown, fotos: { path: string; sha: stri
     })).json();
     try {
       await github(`/git/refs/heads/${ramo}`, { method: 'PATCH', body: JSON.stringify({ sha: commit.sha }) });
-      return commit.sha as string;
+      return versaoDe(texto);
     } catch (erro) {
       // Outro envio chegou antes: refaz o commit sobre a versão mais nova.
       if ((erro as { status?: number }).status !== 422 || tentativa >= 2) throw erro;

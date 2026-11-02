@@ -1,6 +1,6 @@
 // Durante o `pnpm dev`, o painel /adm salva por aqui direto nos arquivos do projeto.
 // No Vercel, as mesmas rotas são atendidas pelas funções em api/, com login, gravando no GitHub.
-import { randomBytes } from 'node:crypto';
+import { createHash, randomBytes } from 'node:crypto';
 import { readFile, writeFile } from 'node:fs/promises';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import path from 'node:path';
@@ -22,7 +22,8 @@ const responder = (res: ServerResponse, status: number, corpo: unknown) => {
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
   res.end(JSON.stringify(corpo));
 };
-const slug = (texto: string) => texto.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60) || 'foto';
+const versaoDe = (texto: string) => createHash('sha1').update(`blob ${Buffer.byteLength(texto)}\0`).update(texto).digest('hex');
+const slug =(texto: string) => texto.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60) || 'foto';
 
 export function painelLocal(): Plugin {
   return {
@@ -35,13 +36,16 @@ export function painelLocal(): Plugin {
       });
       server.middlewares.use('/api/conteudo', async (req, res) => {
         try {
-          if (req.method === 'GET') return responder(res, 200, JSON.parse(await readFile(arquivoDeConteudo, 'utf8')));
+          const atual = await readFile(arquivoDeConteudo, 'utf8');
+          if (req.method === 'GET') return responder(res, 200, { content: JSON.parse(atual), version: versaoDe(atual) });
           if (req.method !== 'PUT') return responder(res, 405, { erro: 'Método não permitido.' });
           // As fotos já foram gravadas em public/ no envio; aqui só interessa o conteúdo.
-          const { content: conteudo } = JSON.parse((await lerCorpo(req)).toString('utf8'));
+          const { content: conteudo, version } = JSON.parse((await lerCorpo(req)).toString('utf8'));
           if (!listas.every(chave => Array.isArray(conteudo?.[chave]))) return responder(res, 400, { erro: 'Conteúdo incompleto.' });
-          await writeFile(arquivoDeConteudo, JSON.stringify(conteudo, null, 2) + '\n');
-          responder(res, 200, { ok: true });
+          if (version !== versaoDe(atual)) return responder(res, 409, { erro: 'O arquivo de conteúdo mudou depois que você abriu o painel. Recarregue a página (F5) e refaça suas alterações.' });
+          const texto = JSON.stringify(conteudo, null, 2) + '\n';
+          await writeFile(arquivoDeConteudo, texto);
+          responder(res, 200, { ok: true, version: versaoDe(texto) });
         } catch (erro) {
           responder(res, 500, { erro: String(erro) });
         }
