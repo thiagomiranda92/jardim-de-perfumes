@@ -26,9 +26,12 @@ O site é publicado no Vercel em <https://jardimdeperfumes.vercel.app> (raiz `/`
 
 ## Painel de administração
 
-Com `pnpm dev` rodando, o painel abre em <http://127.0.0.1:5173/adm>. Nele é possível cadastrar e alterar produtos, fotos, preços, aromas, promoções e kits, feiras e categorias. As alterações ficam em rascunho até **Salvar alterações**; então o painel grava `src/data/conteudo.json` e as fotos enviadas em `public/images/products/` (JPG de até 1086 px e a versão leve `-640.webp`). Para publicar, faça commit desses arquivos e envie para a `main`.
+O painel fica em <https://jardimdeperfumes.vercel.app/adm> e pede senha. Nele é possível cadastrar e alterar produtos, fotos, preços, aromas, promoções e kits, feiras e categorias. As alterações ficam em rascunho até **Salvar alterações**; então as funções em `api/` gravam `src/data/conteudo.json` e as fotos novas (JPG de até 1086 px e a versão leve `-640.webp`, em `public/images/products/`) num único commit na `main`, e o Vercel publica o site de novo em cerca de 1 minuto.
 
-Por enquanto o painel só existe na versão local: o build publicado não inclui `/adm`. O servidor local fica em `scripts/painel-local.ts` e atende `/api/conteudo` e `/api/fotos`; a versão online deverá atender as mesmas rotas, com login.
+- As variáveis `ADMIN_PASSWORD` (senha do painel) e `GITHUB_TOKEN` (token fine-grained com acesso **Contents: Read and write** só a este repositório) ficam em **Vercel → Settings → Environment Variables**, em Production. Depois de trocar uma delas, publique o site de novo (Deployments → Redeploy). Trocar a senha encerra as sessões abertas.
+- Cada salvamento grava o conteúdo inteiro: se duas pessoas editarem ao mesmo tempo, vale o último salvamento. Antes de editar à mão ou pelo `pnpm dev`, faça `git pull`, porque o painel cria commits na `main`.
+- Com `pnpm dev`, o mesmo painel abre em <http://127.0.0.1:5173/adm> sem senha e grava direto nos arquivos locais (`scripts/painel-local.ts`).
+- O GitHub Pages não inclui o painel.
 
 ## Conteúdo
 
