@@ -38,7 +38,10 @@
     {
       "id": "escalda-pes-sal",
       "name": "Escalda-pés de sal",
-      "group": "Autocuidado"
+      "group": "Autocuidado",
+      "sizes": [
+        "30 g"
+      ]
     },
     {
       "id": "escalda-pes-efervescente",
