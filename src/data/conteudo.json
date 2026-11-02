@@ -51,7 +51,10 @@
     {
       "id": "sais-banho",
       "name": "Sais de banho",
-      "group": "Autocuidado"
+      "group": "Autocuidado",
+      "sizes": [
+        "150 g"
+      ]
     },
     {
       "id": "sabonetes",
