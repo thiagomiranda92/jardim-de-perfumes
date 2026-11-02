@@ -335,6 +335,22 @@
         }
       ],
       "fragrance": "Quebra-Nozes"
+    },
+    {
+      "id": "novo-produto",
+      "name": "dpgbksn",
+      "categoryId": "difusores",
+      "images": [],
+      "variants": [
+        {
+          "size": "150ml",
+          "images": []
+        },
+        {
+          "size": "vidros · 500 ml",
+          "images": []
+        }
+      ]
     }
   ],
   "ordemDeDestaque": [
