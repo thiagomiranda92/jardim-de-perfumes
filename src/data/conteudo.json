@@ -65,7 +65,11 @@
     {
       "id": "aromatizadores-carro",
       "name": "Aromatizadores de carro",
-      "group": "Carro"
+      "group": "Carro",
+      "sizes": [
+        "10 ml",
+        "40 ml"
+      ]
     }
   ],
   "aromas": [
