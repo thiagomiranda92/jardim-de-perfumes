@@ -1,9 +1,29 @@
 import { useState } from 'react';
-import { Plus } from 'lucide-react';
+import { Plus, Trash2 } from 'lucide-react';
 import type { Content, StoredProduct } from '../data/catalog';
 import { Field, FormHeader, ListRow, PhotoList, PriceField, TextArea, TextField, Thumb, Toggle, isGlassSize, money, uniqueId, type EditorProps } from './fields';
 
-const firstPhoto = (product: StoredProduct) => product.images[0] ?? product.aromas?.find(aroma => aroma.images.length)?.images[0];
+const firstPhoto = (product: StoredProduct) => product.images[0] ?? product.variants?.find(variant => variant.images.length)?.images[0] ?? product.aromas?.find(aroma => aroma.images.length)?.images[0];
+
+// Um tamanho "Vidro" não tem medida fixa: ao escolhê-lo, pede os ml e guarda "Vidro · 350 ml".
+function SizePicker({ sizes, value, onChange, label = 'Tamanho', emptyLabel = 'Sem tamanho' }: { sizes: string[]; value?: string; onChange: (value: string | undefined) => void; label?: string; emptyLabel?: string }) {
+  const glassSize = sizes.find(size => value === size || value?.startsWith(`${size} · `));
+  const glass = glassSize && isGlassSize(glassSize) ? glassSize : undefined;
+  const ml = glass && value !== glass ? value!.slice(glass.length + 3).replace(/\s*ml$/, '') : undefined;
+  const chosen = glassSize ?? value ?? '';
+  if (!sizes.length) return <TextField label={label === 'Tamanho' ? 'Tamanho ou medida' : label} placeholder="Ex.: 250 ml" hint="Esta categoria não tem tamanho padrão." value={value} onChange={onChange}/>;
+  return <>
+    <Field label={label} hint="Opções definidas na categoria, em Categorias.">{id => <select id={id} value={chosen} onChange={event => onChange(event.target.value || undefined)}>
+      <option value="">{emptyLabel}</option>
+      {sizes.map(size => <option key={size}>{size}</option>)}
+      {value && !sizes.includes(chosen) && <option value={value}>{value} (fora da lista)</option>}
+    </select>}</Field>
+    {glass && <Field label="Quantos ml? *" hint={`Aparece no site como “${glass} · 350 ml”.`}>{id => <div className="price-input"><input id={id} inputMode="decimal" placeholder="Ex.: 350" value={ml ?? ''} onChange={event => {
+      const digits = event.target.value.replace(/[^\d,.]/g, '');
+      onChange(digits ? `${glass} · ${digits} ml` : glass);
+    }}/><span className="unit">ml</span></div>}</Field>}
+  </>;
+}
 
 export function ProductsEditor({ content, edit }: EditorProps) {
   const [openId, setOpenId] = useState<string>();
@@ -26,7 +46,8 @@ export function ProductsEditor({ content, edit }: EditorProps) {
         <h3>{category.name}</h3>
         {items.length ? <ul className="list">{items.map(item => {
           const aromas = item.aromas?.length;
-          const details = [item.price !== undefined && money(item.price), aromas && `${aromas} ${aromas === 1 ? 'aroma' : 'aromas'}`].filter(Boolean).join(' · ');
+          const variants = item.variants?.length;
+          const details = [item.price !== undefined && money(item.price), aromas && `${aromas} ${aromas === 1 ? 'aroma' : 'aromas'}`, variants && `${variants} ${variants === 1 ? 'tamanho' : 'tamanhos'}`].filter(Boolean).join(' · ');
           return <ListRow key={item.id} photo={firstPhoto(item)} title={item.name || 'Produto sem nome'} subtitle={details || undefined} badge={item.available === false ? 'Oculto' : undefined} onOpen={() => setOpenId(item.id)}/>;
         })}</ul> : <p className="empty">Nenhum produto nesta categoria. A vitrine mostra o aviso de fotos em breve.</p>}
       </div>;
@@ -55,11 +76,20 @@ function ProductForm({ product, content, edit, onBack }: { product: StoredProduc
   });
   const aromaName = (id: string) => content.aromas.find(aroma => aroma.id === id)?.name ?? id;
   const sizes = content.categories.find(category => category.id === product.categoryId)?.sizes ?? [];
-  // Um tamanho "Vidro" não tem medida fixa: ao escolhê-lo, o produto pede os ml e guarda "Vidro · 350 ml".
-  const glassSize = sizes.find(size => product.size === size || product.size?.startsWith(`${size} · `));
-  const glass = glassSize && isGlassSize(glassSize) ? glassSize : undefined;
-  const ml = glass && product.size !== glass ? product.size!.slice(glass.length + 3).replace(/\s*ml$/, '') : undefined;
-  const chosen = glassSize ?? product.size ?? '';
+  const variants = product.variants ?? [];
+  type StoredVariant = NonNullable<StoredProduct['variants']>[number];
+  const changeVariant = (index: number, fn: (variant: StoredVariant) => void) => change(item => fn(item.variants![index]));
+  const addVariant = () => change(item => {
+    const used = (item.variants ?? []).map(variant => variant.size);
+    // O primeiro tamanho novo aproveita o tamanho que o produto já tinha.
+    const size = item.variants?.length ? sizes.find(option => !used.includes(option)) ?? '' : item.size ?? sizes[0] ?? '';
+    item.variants = [...(item.variants ?? []), { size, images: [] }];
+    delete item.size;
+  });
+  const removeVariant = (index: number) => change(item => {
+    item.variants!.splice(index, 1);
+    if (!item.variants!.length) delete item.variants;
+  });
 
   return <section className="form">
     <FormHeader title={product.name || 'Novo produto'} onBack={onBack} onDelete={remove}/>
@@ -71,18 +101,9 @@ function ProductForm({ product, content, edit, onBack }: { product: StoredProduc
       </select>}</Field>
       <TextArea label="Descrição" value={product.description} onChange={value => change(item => { item.description = value; })}/>
       <div className="field-row">
-        <PriceField value={product.price} onChange={value => change(item => { item.price = value; })}/>
-        {sizes.length ? <Field label="Tamanho" hint="Opções definidas na categoria, em Categorias.">{id => <select id={id} value={chosen} onChange={event => change(item => { item.size = event.target.value || undefined; })}>
-          <option value="">Sem tamanho</option>
-          {sizes.map(size => <option key={size}>{size}</option>)}
-          {product.size && !sizes.includes(chosen) && <option value={product.size}>{product.size} (fora da lista)</option>}
-        </select>}</Field>
-          : <TextField label="Tamanho ou medida" placeholder="Ex.: 250 ml" hint="Esta categoria não tem tamanho padrão." value={product.size} onChange={value => change(item => { item.size = value; })}/>}
+        <PriceField label={variants.length ? 'Preço padrão' : 'Preço'} hint={variants.length ? 'Usado nos tamanhos sem preço próprio.' : undefined} value={product.price} onChange={value => change(item => { item.price = value; })}/>
+        {!variants.length && <div><SizePicker sizes={sizes} value={product.size} onChange={value => change(item => { item.size = value; })}/></div>}
       </div>
-      {glass && <Field label="Quantos ml? *" hint={`Aparece no site como “${glass} · 350 ml”.`}>{id => <div className="price-input"><input id={id} inputMode="decimal" placeholder="Ex.: 350" value={ml ?? ''} onChange={event => {
-        const value = event.target.value.replace(/[^\d,.]/g, '');
-        change(item => { item.size = value ? `${glass} · ${value} ml` : glass; });
-      }}/><span className="unit">ml</span></div>}</Field>}
       <Toggle label="Mostrar na vitrine" checked={product.available !== false} onChange={checked => change(item => { if (checked) delete item.available; else item.available = false; })}/>
     </div>
 
@@ -90,6 +111,27 @@ function ProductForm({ product, content, edit, onBack }: { product: StoredProduc
       <h3>Fotos do produto</h3>
       <p className="card-hint">{product.aromas?.length ? 'Produtos com aromas mostram a foto de cada aroma. Estas fotos aparecem quando o aroma escolhido não tem foto própria.' : 'A primeira foto é a capa na vitrine.'}</p>
       <PhotoList photos={product.images} name={product.name} onChange={images => change(item => { item.images = images; })}/>
+    </div>
+
+    <div className="card">
+      <h3>Tamanhos</h3>
+      <p className="card-hint">{variants.length ? 'No site, o cliente escolhe o tamanho e a foto e o preço mudam. Sem foto ou preço, valem os do produto.' : 'Cadastre aqui quando este produto é vendido em mais de um tamanho, cada um com foto e preço próprios.'}</p>
+      {variants.length > 0 && <ul className="aroma-variants">
+        {variants.map((variant, index) => <li key={index}><details open={!variant.size}>
+          <summary>
+            <Thumb photo={variant.images[0]}/>
+            <span className="list-text"><strong>{variant.size || 'Tamanho sem nome'}</strong><small>{[variant.images.length ? `${variant.images.length} ${variant.images.length === 1 ? 'foto' : 'fotos'}` : 'Sem foto', variant.price !== undefined && money(variant.price), variant.available === false && 'Esgotado'].filter(Boolean).join(' · ')}</small></span>
+          </summary>
+          <div className="variant-body">
+            <SizePicker sizes={sizes} label="Tamanho *" emptyLabel="Escolha o tamanho" value={variant.size || undefined} onChange={value => changeVariant(index, v => { v.size = value ?? ''; })}/>
+            <PhotoList photos={variant.images} name={`${product.name} ${variant.size}`} onChange={images => changeVariant(index, v => { v.images = images; })}/>
+            <PriceField label="Preço deste tamanho" hint="Vazio usa o preço padrão do produto." value={variant.price} onChange={value => changeVariant(index, v => { v.price = value; })}/>
+            <Toggle label="Disponível" checked={variant.available !== false} onChange={checked => changeVariant(index, v => { if (checked) delete v.available; else v.available = false; })}/>
+            <button type="button" className="mini-button danger with-text" onClick={() => removeVariant(index)}><Trash2 size={15}/>Remover tamanho</button>
+          </div>
+        </details></li>)}
+      </ul>}
+      <button type="button" className="upload-button" onClick={addVariant}><Plus size={18}/>{variants.length ? 'Adicionar outro tamanho' : 'Adicionar tamanho'}</button>
     </div>
 
     <div className="card">

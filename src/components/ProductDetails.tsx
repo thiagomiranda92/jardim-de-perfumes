@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Check, Plus, X } from 'lucide-react';
-import { type Category, type Product, products } from '../data/catalog';
+import { availableVariants, type Category, type Product, products } from '../data/catalog';
 import { store } from '../data/store';
 import { fullSizes, photoSrcSet } from '../data/photos';
 import { PhotoPlaceholder } from './PhotoPlaceholder';
@@ -17,23 +17,44 @@ function DetailsContent({ selection, onAdd }: { selection: Selection; onAdd: (la
   const [aromaId, setAromaId] = useState(selection.aromaId);
   // Sem aroma escolhido, começa pelo primeiro que já tem fotografia.
   const aroma = aromas.find(a => a.id === aromaId) ?? aromas.find(a => a.images.length) ?? aromas[0];
+  // Quando cada produto da categoria é um aroma (campo de aroma preenchido), os aromas são os próprios produtos.
+  const aromaProducts = !aromas.length && items.some(item => item.fragrance) ? items : [];
+  const variants = product ? availableVariants(product) : [];
+  const [size, setSize] = useState<string>();
+  const variant = variants.find(item => item.size === size) ?? variants[0];
   const [photoIndex, setPhotoIndex] = useState(0);
-  const images = aroma?.images.length ? aroma.images : product?.images ?? [];
+  const images = variant?.images.length ? variant.images : aroma?.images.length ? aroma.images : product?.images ?? [];
   const photo = images[photoIndex] ?? images[0];
-  const price = aroma?.price ?? product?.price;
-  const orderLabel = product ? [product.name, aroma?.name].filter(Boolean).join(' · ') : selection.category.name;
+  const price = variant?.price ?? aroma?.price ?? product?.price;
+  const sizeLabel = variant?.size ?? product?.size;
+  const orderLabel = product ? [product.name, aroma?.name, variant?.size].filter(Boolean).join(' · ') : selection.category.name;
   const addToList = () => {
     onAdd(orderLabel);
     setAddedLabel(orderLabel);
   };
+  const showGallery = () => requestAnimationFrame(() => gallery.current?.scrollIntoView({
+    behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+    block: 'nearest',
+  }));
   const selectAroma = (id: string) => {
     setAromaId(id);
     setPhotoIndex(0);
-    requestAnimationFrame(() => gallery.current?.scrollIntoView({
-      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
-      block: 'nearest',
-    }));
+    showGallery();
   };
+  // Ao trocar de aroma, mantém o tamanho escolhido quando o novo aroma também o tem.
+  const selectProduct = (id: string) => {
+    setProductId(id);
+    setAromaId(undefined);
+    setPhotoIndex(0);
+    showGallery();
+  };
+  const selectSize = (value: string) => {
+    setSize(value);
+    setPhotoIndex(0);
+    showGallery();
+  };
+  const title = aromaProducts.length && product?.fragrance ? selection.category.short ?? selection.category.name : product?.name ?? selection.category.name;
+  const subtitle = aroma?.name ?? (aromaProducts.length ? product?.fragrance : undefined);
   return <div className="details-grid">
     <div className="details-gallery" ref={gallery}>
       <div className="details-main-photo" aria-live="polite">{photo ? <img key={photo.src} src={photo.src} srcSet={photoSrcSet(photo.src)} sizes={fullSizes} alt={photo.alt} width="1086" height="1448"/> : <PhotoPlaceholder/>}</div>
@@ -41,13 +62,16 @@ function DetailsContent({ selection, onAdd }: { selection: Selection; onAdd: (la
     </div>
     <div className="details-copy">
       <p className="eyebrow">{selection.category.group}</p>
-      <h2 id="product-detail-title">{product?.name ?? selection.category.name}{aroma && <em>{aroma.name}</em>}</h2>
+      <h2 id="product-detail-title">{title}{subtitle && <em>{subtitle}</em>}</h2>
       {product?.description && <p>{product.description}</p>}
-      {product?.size && <p>{product.size}</p>}
       {aroma?.description && <p>{aroma.description}</p>}
-      {price !== undefined && <p className="detail-price" aria-live="polite">{money(price)}</p>}
-      {items.length > 1 && <div className="detail-options"><h3>Produtos desta categoria</h3><div className="option-list">{items.map(item => <button key={item.id} aria-pressed={item.id === productId} onClick={() => {setProductId(item.id);setAromaId(undefined);setPhotoIndex(0);}}>{item.name}</button>)}</div></div>}
-      <div className="detail-options"><h3>Aromas</h3>{aromas.length ? <div className="option-list">{aromas.map(option => <button key={option.id} aria-pressed={option.id === aroma?.id} onClick={() => selectAroma(option.id)}>{option.name}{option.images.length > 0 && <span className="has-photo" title="Com fotografia"><span className="sr-only"> (com fotografia)</span></span>}</button>)}</div> : <p>{product?.fragrance ?? 'Os aromas disponíveis ainda serão adicionados. Consulte as opções pelo Instagram.'}</p>}</div>
+      {price !== undefined && <p className="detail-price" aria-live="polite">{money(price)}{sizeLabel && <small> · {sizeLabel}</small>}</p>}
+      {aromaProducts.length > 0 ? <div className="detail-options"><h3>Aromas</h3><div className="option-list">{aromaProducts.map(item => <button key={item.id} aria-pressed={item.id === productId} onClick={() => selectProduct(item.id)}>{item.fragrance ?? item.name}</button>)}</div></div>
+        : items.length > 1 && <div className="detail-options"><h3>Produtos desta categoria</h3><div className="option-list">{items.map(item => <button key={item.id} aria-pressed={item.id === productId} onClick={() => selectProduct(item.id)}>{item.name}</button>)}</div></div>}
+      {aromas.length > 0 && <div className="detail-options"><h3>Aromas</h3><div className="option-list">{aromas.map(option => <button key={option.id} aria-pressed={option.id === aroma?.id} onClick={() => selectAroma(option.id)}>{option.name}{option.images.length > 0 && <span className="has-photo" title="Com fotografia"><span className="sr-only"> (com fotografia)</span></span>}</button>)}</div></div>}
+      {!aromas.length && !aromaProducts.length && product && <div className="detail-options"><h3>Aroma</h3><p>{product.fragrance ?? 'Os aromas disponíveis ainda serão adicionados. Consulte as opções pelo Instagram.'}</p></div>}
+      {variants.length > 0 ? <div className="detail-options"><h3>Tamanhos</h3><div className="option-list">{variants.map(item => <button key={item.size} aria-pressed={item.size === variant?.size} onClick={() => selectSize(item.size)}>{item.size}</button>)}</div></div>
+        : product?.size && <div className="detail-options"><h3>Tamanho</h3><p>{product.size}</p></div>}
       {!product && <p>As fotografias, descrições e preços desta categoria serão adicionados em breve.</p>}
       <div className="details-actions">
         <button className="button primary" onClick={addToList}>{addedLabel === orderLabel ? <Check size={17} aria-hidden="true"/> : <Plus size={17} aria-hidden="true"/>}{addedLabel === orderLabel ? 'Adicionado à lista' : 'Adicionar à lista'}</button>

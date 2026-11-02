@@ -8,6 +8,8 @@ export interface Photo { src: string; alt: string }
 // `sizes`: tamanhos padrão da categoria, oferecidos como opções no cadastro do produto. Sem eles, o tamanho é digitado livremente.
 export interface Category { id: string; name: string; group: Group; short?: string; sizes?: string[] }
 export interface Aroma { id: string; name: string; images: Photo[]; description?: string; price?: number; available?: boolean }
+// Tamanho à venda de um produto, com foto e preço próprios. Sem foto ou preço, valem os do produto.
+export interface Variant { size: string; images: Photo[]; price?: number; available?: boolean }
 export interface Product {
   id: string;
   name: string;
@@ -18,6 +20,7 @@ export interface Product {
   fragrance?: string;
   size?: string;
   variations?: string[];
+  variants?: Variant[];
   aromas?: Aroma[];
   available?: boolean;
   featured?: boolean;
@@ -51,11 +54,16 @@ export const aromaList = dados.aromas;
 export const products: Product[] = dados.products.map(produto => ({
   ...produto,
   images: produto.images.map(comCaminho),
+  variants: produto.variants?.map(variante => ({ ...variante, images: variante.images.map(comCaminho) })),
   aromas: produto.aromas?.flatMap(aroma => {
     const name = aromaList.find(item => item.id === aroma.id)?.name;
     return name ? [{ ...aroma, name, images: aroma.images.map(comCaminho) }] : [];
   }),
 }));
+
+export const availableVariants = (product: Product) => product.variants?.filter(variant => variant.available !== false) ?? [];
+// Capa do produto: a própria foto ou, sem ela, a do primeiro tamanho que tiver foto.
+export const coverPhoto = (product: Product): Photo | undefined => product.images[0] ?? availableVariants(product).find(variant => variant.images.length)?.images[0];
 
 // Ordem pensada para alternar as cores das fotografias na vitrine.
 export const ordemDeDestaque = dados.ordemDeDestaque;

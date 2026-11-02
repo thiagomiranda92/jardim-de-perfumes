@@ -78,6 +78,10 @@ Cadastre apenas informações confirmadas, pelo painel ou em `src/data/conteudo.
 - `highlights`: promoções e kits de presente do carrossel. Cada item tem identificador, tipo (`Promoção`, `Kit` ou `Presente`), título, texto e, quando houver, validade e imagem. Enquanto a lista estiver vazia, o carrossel apresenta avisos transparentes de que os detalhes serão publicados posteriormente. Não há rotação automática.
 - `fairs`: feiras do calendário. Cada item tem identificador, data no formato `AAAA-MM-DD`, título, local e, quando houver, horário, endereço e observação. O dia fica marcado e, ao clicar, mostra os detalhes e o link para o mapa. O calendário abre no mês da próxima feira.
 
+## Tamanhos
+
+Um produto pode ser vendido em vários tamanhos (`variants`, em `src/data/conteudo.json`), cada um com tamanho, fotos, preço e disponibilidade próprios. No painel, use **Tamanhos → Adicionar tamanho** no cadastro do produto; as opções vêm dos tamanhos padrão da categoria. No site, a janela do produto mostra primeiro os aromas (os produtos da mesma categoria, pelo campo de aroma) e depois os tamanhos do aroma escolhido; ao trocar o tamanho, a foto e o preço mudam. Sem foto ou preço próprios, o tamanho usa os do produto.
+
 ## Produtos por aroma
 
 Os nomes na faixa de aromas abrem uma tela com todos os produtos cadastrados naquele aroma. Para um produto aparecer nessa tela, inclua o aroma na lista `aromas` do produto, em `src/data/conteudo.json` (no painel, marque o aroma no produto). Nos produtos, cada aroma guarda só o identificador; o nome vem da lista geral `aromas`.

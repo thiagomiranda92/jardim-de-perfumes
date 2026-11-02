@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { ArrowUpRight, Flower2, Plus, Search, X } from 'lucide-react';
-import { categories, ordemDeDestaque, products, type Aroma, type Category, type Product } from '../data/catalog';
+import { availableVariants, categories, coverPhoto, ordemDeDestaque, products, type Aroma, type Category, type Product } from '../data/catalog';
 import { cardSizes, photoSrcSet } from '../data/photos';
 import { InstagramLink } from './InstagramLink';
 import { PhotoPlaceholder } from './PhotoPlaceholder';
@@ -26,7 +26,7 @@ const productCard = (category: Category, product: Product): Card => ({
   key: product.id,
   label: category.name,
   name: product.name,
-  image: product.images[0],
+  image: coverPhoto(product),
   selection: { category, product },
 });
 
@@ -75,7 +75,7 @@ export function Catalog({ categoryId, onCategoryChange, query, onQueryChange: se
     const matches = (...parts: (string | undefined)[]) => terms.every(term => normalize([...base, ...parts].join(' ')).includes(term));
     const found = productsOf(item).flatMap(product => {
       const aromas = aromasOf(product);
-      const own = [product.name, product.description, product.fragrance];
+      const own = [product.name, product.description, product.fragrance, product.size, ...availableVariants(product).map(variant => variant.size)];
       if (!aromas.length) return matches(...own) ? [productCard(item, product)] : [];
       return aromas.filter(aroma => matches(...own, aroma.name)).map(aroma => aromaCard(item, product, aroma));
     });
