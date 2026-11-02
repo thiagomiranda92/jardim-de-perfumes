@@ -402,5 +402,12 @@
     "quebra-nozes"
   ],
   "highlights": [],
-  "fairs": []
+  "fairs": [
+    {
+      "id": "feira-2026-11-02",
+      "date": "2026-11-02",
+      "title": "TESTE DO PAINEL",
+      "location": "Campinas"
+    }
+  ]
 }
