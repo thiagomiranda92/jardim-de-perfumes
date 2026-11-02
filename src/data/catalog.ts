@@ -5,7 +5,8 @@ import conteudo from './conteudo.json';
 export type Group = 'Ambientes' | 'Autocuidado' | 'Carro';
 export const groups: Group[] = ['Ambientes', 'Autocuidado', 'Carro'];
 export interface Photo { src: string; alt: string }
-export interface Category { id: string; name: string; group: Group; short?: string }
+// `sizes`: tamanhos padrão da categoria, oferecidos como opções no cadastro do produto. Sem eles, o tamanho é digitado livremente.
+export interface Category { id: string; name: string; group: Group; short?: string; sizes?: string[] }
 export interface Aroma { id: string; name: string; images: Photo[]; description?: string; price?: number; available?: boolean }
 export interface Product {
   id: string;

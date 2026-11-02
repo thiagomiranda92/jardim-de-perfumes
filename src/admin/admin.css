@@ -141,6 +141,10 @@ h3 { font-size: .78rem; font-weight: 600; letter-spacing: .16em; text-transform:
 .inline-add label { font-weight: 500; font-size: .9rem; }
 .inline-add > div { display: flex; gap: 10px; }
 .inline-add small { color: var(--muted); font-size: .82rem; }
+.size-list { list-style: none; padding: 0; display: grid; gap: 6px; }
+.size-list li { display: flex; align-items: center; gap: 6px; padding: 6px 6px 6px 14px; border: 1px solid var(--line); border-radius: 12px; background: #fff; }
+.size-list span { flex: 1; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .aroma-row { padding: 10px; background: var(--paper); border: 1px solid var(--line); border-radius: 14px; }
 .aroma-row-main { flex: 1; min-width: 0; display: grid; gap: 8px; }
 .aroma-row input { min-height: 40px; }

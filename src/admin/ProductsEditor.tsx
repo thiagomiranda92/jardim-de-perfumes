@@ -54,6 +54,7 @@ function ProductForm({ product, content, edit, onBack }: { product: StoredProduc
     if (!item.aromas.length) delete item.aromas;
   });
   const aromaName = (id: string) => content.aromas.find(aroma => aroma.id === id)?.name ?? id;
+  const sizes = content.categories.find(category => category.id === product.categoryId)?.sizes ?? [];
 
   return <section className="form">
     <FormHeader title={product.name || 'Novo produto'} onBack={onBack} onDelete={remove}/>
@@ -66,7 +67,12 @@ function ProductForm({ product, content, edit, onBack }: { product: StoredProduc
       <TextArea label="Descrição" value={product.description} onChange={value => change(item => { item.description = value; })}/>
       <div className="field-row">
         <PriceField value={product.price} onChange={value => change(item => { item.price = value; })}/>
-        <TextField label="Tamanho ou medida" placeholder="Ex.: 250 ml" value={product.size} onChange={value => change(item => { item.size = value; })}/>
+        {sizes.length ? <Field label="Tamanho" hint="Opções definidas na categoria, em Categorias.">{id => <select id={id} value={product.size ?? ''} onChange={event => change(item => { item.size = event.target.value || undefined; })}>
+          <option value="">Sem tamanho</option>
+          {sizes.map(size => <option key={size}>{size}</option>)}
+          {product.size && !sizes.includes(product.size) && <option value={product.size}>{product.size} (fora da lista)</option>}
+        </select>}</Field>
+          : <TextField label="Tamanho ou medida" placeholder="Ex.: 250 ml" hint="Esta categoria não tem tamanho padrão." value={product.size} onChange={value => change(item => { item.size = value; })}/>}
       </div>
       <Toggle label="Mostrar na vitrine" checked={product.available !== false} onChange={checked => change(item => { if (checked) delete item.available; else item.available = false; })}/>
     </div>
